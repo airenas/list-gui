@@ -4,5 +4,5 @@ export const environment = {
   statusUrl: 'status.service/',
   resultUrl: 'result.service/',
   editorUrl: 'editor/#/lt/remote-import/',
-  version: '1.9.979'
+  version: '0.1.2'
 };
