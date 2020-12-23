@@ -2,7 +2,7 @@
 @import './../../theme.scss';
 
 .result-form {
-  // min-width: 250px;
+     min-width: 200px;
   // max-width: 1000px;
   // width: 100%;
 }
@@ -15,11 +15,12 @@
 
 .transcription-input {
   display: inline-block;
-  width: 85%;
+  width: 100%;
 }
 
 .transcription-button {
   margin-left: 10px;
+  min-width: 90px;
 }
 
 .result-full-width {

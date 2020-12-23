@@ -2,7 +2,7 @@
 @import './../../styles.scss';
 
 .upload-form {
-  // min-width: 250px;
+  min-width: 200px;
   // // max-width: 300px;
   // width: 100%;
 }
@@ -41,7 +41,7 @@
   border-width: 1px;
   border-color: grey;
   display: inline-block;
-  width: calc(100% - #{$buttonSize} - 1px);
+  width: calc(100% - #{$buttonSize});
 }
 
 .mic-audio-control {
