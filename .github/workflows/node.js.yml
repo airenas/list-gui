@@ -36,7 +36,7 @@ jobs:
     - run: npm run test:prod
     
     - name: Fix lcov paths
-      run: cat ./coverage/ear-app/lcov.info | sed 's/SF:src/SF:ear-app\/src/g' > ./coverage/lcov.info
+      run: cat ./coverage/lcov.info | sed 's/SF:src/SF:ear-app\/src/g' > ./coverage/lcov_u.info
     
     - run: npm run lint 
 
@@ -44,4 +44,4 @@ jobs:
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ./ear-app/coverage/lcov.info
+        path-to-lcov: ./ear-app/coverage/lcov_u.info
