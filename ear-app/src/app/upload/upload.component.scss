@@ -14,9 +14,9 @@
 
 .upload-select-button {
   min-width: 0px;
-  width: 15%;
+  width: $buttonSize;
   padding: 0 0px;
-  margin-left: -10%;
+  margin-left: -$buttonSize;
   opacity: 0.7;
 }
 
@@ -41,7 +41,7 @@
   border-width: 1px;
   border-color: grey;
   display: inline-block;
-  width: 95%;
+  width: calc(100% - #{$buttonSize} - 1px);
 }
 
 .mic-audio-control {
@@ -50,8 +50,8 @@
 
 .mic-button {
   min-width: 0px;
-  //margin-left: 11%;
-  padding: 0 5px;
+  width: $buttonSize;
+  padding: 0 $buttonPadding;
 }
 
 .upload-spinner {
