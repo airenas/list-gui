@@ -10,16 +10,18 @@ export class Config {
     public audioUrl: string;
     public resultUrl: string;
     public editorUrl: string;
+    public baseServiceUrl: string;
 
     constructor() {
-        this.init('')
+        this.init('');
     }
 
     init(prefix: string) {
+        this.baseServiceUrl = prefix;
         this.sendFileUrl = prefix + environment.sendFileUrl + 'upload';
         this.recognizersUrl = prefix + environment.sendFileUrl + 'recognizers';
         this.statusUrl = prefix + environment.statusUrl + 'status/';
-        this.subscribeUrl = prefix + environment.statusUrl + 'subscribe';
+        this.subscribeUrl = environment.statusUrl + 'subscribe';
         this.audioUrl = prefix + environment.resultUrl + 'audio/';
         this.resultUrl = prefix + environment.resultUrl + 'result/';
         this.editorUrl = prefix + environment.editorUrl;

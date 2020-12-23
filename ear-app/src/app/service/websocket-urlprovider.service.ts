@@ -11,7 +11,10 @@ export class WebsocketURLProviderService {
   }
 
   getURLInternal(location: Location, routerURL: string): string {
-    const basePathURL = this.basePathName(location.pathname, routerURL);
+    let basePathURL = this.config.baseServiceUrl;
+    if (!this.isSetURL(basePathURL)) {
+      basePathURL = this.basePathName(location.pathname, routerURL);
+    }
     let result = this.getProtocol(location) + location.hostname + this.getPort(location);
     result = this.addURL(result, basePathURL);
     result = this.addURL(result, this.config.subscribeUrl);
@@ -20,6 +23,10 @@ export class WebsocketURLProviderService {
 
   private getProtocol(location: Location) {
     return window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+  }
+
+  private isSetURL(str: string) {
+    return str && (str.startsWith('https:') || str.startsWith('http:'));
   }
 
   private getPort(location: Location) {

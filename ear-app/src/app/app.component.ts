@@ -22,9 +22,9 @@ export class AppComponent implements OnInit {
     }
     if (this.transcriptionID && this.transcriptionID !== '') {
       this.config.init(this.serviceURL);
-      this.router.navigateByUrl('/results/' + this.transcriptionID);
+      this.router.navigateByUrl('/results/' + this.transcriptionID, {skipLocationChange: true});
     } else {
-      this.router.navigateByUrl('/upload');
+      this.router.navigateByUrl('/upload', {skipLocationChange: true});
     }
   }
 }

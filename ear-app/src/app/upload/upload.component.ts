@@ -175,7 +175,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   onResult(result: SendFileResult) {
     this.fileChange(null);
     this.showInfo('Failas nusiųstas. Transkripcijos ID: ' + result.id);
-    this.router.navigateByUrl('/results/' + result.id);
+    this.router.navigateByUrl('/results/' + result.id, {skipLocationChange: true});
   }
 
   get email(): string {
