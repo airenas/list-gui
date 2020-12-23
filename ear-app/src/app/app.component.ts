@@ -1,14 +1,30 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Config } from './config';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-list',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  title = 'app';
+export class AppComponent implements OnInit {
+  // tslint:disable-next-line: no-input-rename
+  @Input('service-url') serviceURL: string;
+  // tslint:disable-next-line: no-input-rename
+  @Input('transcription-id') transcriptionID: string;
 
-  copyrightDate(): number {
-    return new Date().getFullYear();
+  constructor(protected config: Config, private router: Router) { }
+
+  ngOnInit() {
+    console.log('ServiceURL=' + this.serviceURL);
+    if (this.serviceURL !== '') {
+      this.config.init(this.serviceURL);
+    }
+    if (this.transcriptionID && this.transcriptionID !== '') {
+      this.config.init(this.serviceURL);
+      this.router.navigateByUrl('/results/' + this.transcriptionID);
+    } else {
+      this.router.navigateByUrl('/upload');
+    }
   }
 }

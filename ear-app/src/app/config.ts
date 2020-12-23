@@ -12,13 +12,16 @@ export class Config {
     public editorUrl: string;
 
     constructor() {
-        const prefix = '';
+        this.init('')
+    }
+
+    init(prefix: string) {
         this.sendFileUrl = prefix + environment.sendFileUrl + 'upload';
         this.recognizersUrl = prefix + environment.sendFileUrl + 'recognizers';
         this.statusUrl = prefix + environment.statusUrl + 'status/';
         this.subscribeUrl = prefix + environment.statusUrl + 'subscribe';
         this.audioUrl = prefix + environment.resultUrl + 'audio/';
         this.resultUrl = prefix + environment.resultUrl + 'result/';
-        this.editorUrl = environment.editorUrl;
+        this.editorUrl = prefix + environment.editorUrl;
     }
 }

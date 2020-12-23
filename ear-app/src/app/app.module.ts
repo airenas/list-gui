@@ -4,7 +4,7 @@ import { AudioPlayerFactory } from './utils/audio.player';
 import { ResultSubscriptionService, WSResultSubscriptionService } from './service/result-subscription.service';
 import { HttpTranscriptionService, TranscriptionService } from './service/transcription.service';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -30,6 +30,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { WebsocketURLProviderService } from './service/websocket-urlprovider.service';
 import { MicrophoneFactory } from './utils/microphone';
 import { EditorURLProviderService } from './service/editor-urlprovider.service';
+import { createCustomElement } from '@angular/elements';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,13 @@ import { EditorURLProviderService } from './service/editor-urlprovider.service';
     { provide: MicrophoneFactory, useClass: MicrophoneFactory },
     { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [],
+  entryComponents: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private injector: Injector) {
+    const el = createCustomElement(AppComponent, { injector });
+    customElements.define('app-list', el);
+  }
+  ngDoBootstrap() { }
+}

@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-  sendFileUrl: 'transcriber/',
-  statusUrl: 'status.service/',
-  resultUrl: 'result.service/',
-  editorUrl: 'editor/#/lt/remote-import/',
+  sendFileUrl: '/transcriber/',
+  statusUrl: '/status.service/',
+  resultUrl: '/result.service/',
+  editorUrl: '/editor/#/lt/remote-import/',
   version: 'DEV'
 };
 
