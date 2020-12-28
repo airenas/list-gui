@@ -12,29 +12,31 @@ export class EditorURLProviderService {
   }
 
   getURLInternal(location: URL, routerURL: string, audioURL: string, latticeURL: string): string {
-    const basePathURL = this.basePathName(location.pathname, routerURL);
-    let mainUrl = location.protocol + '//' + location.hostname + this.getPort(location);
+    let basePathURL = '';
+    if (PathUtils.isSetURL(this.config.baseServiceUrl)) {
+      location = new URL(this.config.baseServiceUrl);
+      basePathURL = location.pathname;
+    } else {
+      basePathURL = PathUtils.basePathName(location.pathname, routerURL);
+    }
+    let mainUrl = location.protocol + '//' + location.hostname + PathUtils.getPort(location);
     mainUrl = PathUtils.addURL(mainUrl, basePathURL);
     let result = mainUrl;
-    result = PathUtils.addURL(result, this.config.editorUrl);
-    result = PathUtils.addURL(result, encodeURIComponent(PathUtils.addURL(mainUrl, latticeURL)));
-    result = PathUtils.addURL(result, encodeURIComponent(PathUtils.addURL(mainUrl, audioURL)));
-    return result;
-  }
-
-  private getPort(location: URL) {
-    const defaultPort = location.protocol === 'https:' ? '443' : '80';
-    if (location.port !== defaultPort) {
-      return ':' + location.port;
+    if (PathUtils.isSetURL(this.config.editorUrl)) {
+      result = this.config.editorUrl;
     } else {
-      return '';
+      result = PathUtils.addURL(result, this.config.editorUrl);
     }
-  }
-
-  private basePathName(allPath, routersURL) {
-    if (allPath.endsWith(routersURL)) {
-      return allPath.substring(0, allPath.length - routersURL.length);
+    if (PathUtils.isSetURL(latticeURL)) {
+      result = PathUtils.addURL(result, encodeURIComponent(latticeURL));
+    } else {
+      result = PathUtils.addURL(result, encodeURIComponent(PathUtils.addURL(mainUrl, latticeURL)));
     }
-    return '';
+    if (PathUtils.isSetURL(audioURL)) {
+      result = PathUtils.addURL(result, encodeURIComponent(audioURL));
+    } else {
+      result = PathUtils.addURL(result, encodeURIComponent(PathUtils.addURL(mainUrl, audioURL)));
+    }
+    return result;
   }
 }
