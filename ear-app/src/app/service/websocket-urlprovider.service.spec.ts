@@ -5,32 +5,8 @@ import { TestAppModule } from '../base/test.app.module';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Config } from '../config';
 
-export class MockLocation implements Location {
-  ancestorOrigins: DOMStringList;
-  hash: string; host: string;
-  hostname: string;
-  href: string;
-  origin: string;
-  pathname: string;
-  port: string;
-  protocol: string;
-  search: string;
-  assign(url: string): void {
-  }
-
-  reload(forcedReload?: boolean): void {
-  }
-
-  replace(url: string): void {
-  }
-
-  toString(): string {
-    return '';
-  }
-}
-
 describe('WebsocketURLProviderService', () => {
-  let location: MockLocation;
+  let location: URL;
   let config: Config;
 
   beforeEach(() => {
@@ -41,11 +17,7 @@ describe('WebsocketURLProviderService', () => {
       ],
       imports: [TestAppModule, RouterTestingModule.withRoutes([])]
     });
-    location = new MockLocation();
-    location.protocol = 'http';
-    location.port = '8000';
-    location.hostname = 'host';
-    location.pathname = '/';
+    location = new URL('http://host:8000/');
   });
 
   it('should be created', inject([WebsocketURLProviderService], (service: WebsocketURLProviderService) => {
@@ -55,6 +27,12 @@ describe('WebsocketURLProviderService', () => {
   it('returns ws', inject([WebsocketURLProviderService], (service: WebsocketURLProviderService) => {
     config.subscribeUrl = 'olia';
     expect(service.getURLInternal(location, 'result')).toEqual('ws://host:8000/olia');
+  }));
+
+  it('returns path from config.baseServiceUrl', inject([WebsocketURLProviderService], (service: WebsocketURLProviderService) => {
+    config.subscribeUrl = 'olia';
+    config.baseServiceUrl = 'http://os:8000/ausis'
+    expect(service.getURLInternal(location, 'result')).toEqual('ws://os:8000/ausis/olia');
   }));
 
   it('returns path from config', inject([WebsocketURLProviderService], (service: WebsocketURLProviderService) => {

@@ -1,3 +1,4 @@
+import { PathUtils } from './../utils/path';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Config } from '../config';
@@ -7,29 +8,32 @@ export class WebsocketURLProviderService {
   constructor(private config: Config, private router: Router) { }
 
   public getURL() {
-    return this.getURLInternal(window.location, this.router.url);
+    return this.getURLInternal(new URL(window.location.href), this.router.url);
   }
 
-  getURLInternal(location: Location, routerURL: string): string {
-    let basePathURL = this.config.baseServiceUrl;
-    if (!this.isSetURL(basePathURL)) {
+  getURLInternal(location: URL, routerURL: string): string {
+    let basePathURL = '';
+    if (this.isSetURL(this.config.baseServiceUrl)) {
+      location = new URL(this.config.baseServiceUrl);
+      basePathURL = location.pathname;
+    } else {
       basePathURL = this.basePathName(location.pathname, routerURL);
     }
     let result = this.getProtocol(location) + location.hostname + this.getPort(location);
-    result = this.addURL(result, basePathURL);
-    result = this.addURL(result, this.config.subscribeUrl);
+    result = PathUtils.addURL(result, basePathURL);
+    result = PathUtils.addURL(result, this.config.subscribeUrl);
     return result;
   }
 
-  private getProtocol(location: Location) {
-    return window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+  private getProtocol(location: URL) {
+    return location.protocol === 'https:' ? 'wss://' : 'ws://';
   }
 
   private isSetURL(str: string) {
     return str && (str.startsWith('https:') || str.startsWith('http:'));
   }
 
-  private getPort(location: Location) {
+  private getPort(location: URL) {
     const defaultPort = location.protocol === 'https:' ? '443' : '80';
     if (location.port !== defaultPort) {
       return ':' + location.port;
@@ -43,17 +47,5 @@ export class WebsocketURLProviderService {
       return allPath.substring(0, allPath.length - routersURL.length);
     }
     return '';
-  }
-
-  private addURL(s1, s2) {
-    if (s1 && s2 && s1.length > 0 && s2.length > 0) {
-      if (s1.endsWith('/') && s2.startsWith('/')) {
-        return s1 + s2.substring(1);
-      }
-      if (!s1.endsWith('/') && !s2.startsWith('/')) {
-        return s1 + '/' + s2;
-      }
-    }
-    return s1 + s2;
   }
 }
