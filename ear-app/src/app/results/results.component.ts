@@ -208,7 +208,7 @@ export class ResultsComponent extends BaseComponent implements OnInit, OnDestroy
     this.status = null;
     if (this.result != null) {
       this.recognizedText = result.recognizedText;
-      try{
+      try {
         this.resultSubscriptionService.send(this.result.id);
       } catch (error) {
         console.error('Error', error);

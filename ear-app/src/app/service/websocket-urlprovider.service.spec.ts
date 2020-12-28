@@ -31,7 +31,7 @@ describe('WebsocketURLProviderService', () => {
 
   it('returns path from config.baseServiceUrl', inject([WebsocketURLProviderService], (service: WebsocketURLProviderService) => {
     config.subscribeUrl = 'olia';
-    config.baseServiceUrl = 'http://os:8000/ausis'
+    config.baseServiceUrl = 'http://os:8000/ausis';
     expect(service.getURLInternal(location, 'result')).toEqual('ws://os:8000/ausis/olia');
   }));
 
