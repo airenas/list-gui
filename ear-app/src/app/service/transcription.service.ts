@@ -5,7 +5,6 @@ import { FileData } from './file-data';
 import { SendFileResult } from './../api/send-file-result';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { throwError } from 'rxjs';
@@ -24,10 +23,15 @@ export class HttpTranscriptionService implements TranscriptionService {
   sendFileUrl: string;
   statusUrl: string;
   recognizersUrl: string;
-  private socket;
 
   static asString(error: HttpErrorResponse): string {
     if (error !== null) {
+      if (error.status === 401) {
+        return 'Neturite teisių?';
+      }
+      if (error.status === 403) {
+        return 'Baigėsi limitas';
+      }
       const value = String(error.error);
       if (value.includes('Wrong email')) {
         return 'Neteisingas El. paštas';

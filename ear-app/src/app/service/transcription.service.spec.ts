@@ -1,3 +1,4 @@
+import { ErrorCode } from './../api/error-codes';
 import { TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
@@ -21,6 +22,10 @@ describe('HttpTranscriptionService', () => {
     return HttpTranscriptionService.asString(new HttpErrorResponse({ error: error }));
   }
 
+  function makeErrorCode(error: number): string {
+    return HttpTranscriptionService.asString(new HttpErrorResponse({ status: error }));
+  }
+
   it('should parse messages', (() => {
     expect(makeError('error')).toBe('Serviso klaida');
     expect(makeError('Wrong email')).toBe('Neteisingas El. paštas');
@@ -28,5 +33,7 @@ describe('HttpTranscriptionService', () => {
     expect(makeError('No file')).toBe('Nenurodytas failas');
     expect(makeError('No recognizer')).toBe('Nepavyko parinkti atpažintuvą');
     expect(makeError('Unknown recognizer: aaaa')).toBe('Nepavyko parinkti atpažintuvą');
+    expect(makeErrorCode(401)).toBe('Neturite teisių?');
+    expect(makeErrorCode(403)).toBe('Baigėsi limitas');
   }));
 });
