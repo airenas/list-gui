@@ -11,7 +11,10 @@ export abstract class BaseComponent {
   }
 
   asString(msg: string, error: any): string {
-    return msg +  ' ' + String(error);
+    if (error != null){
+      return msg +  ' ' + String(error);
+    }
+    return msg;
   }
 
   showInfo(info: any) {

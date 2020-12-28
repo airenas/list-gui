@@ -208,7 +208,12 @@ export class ResultsComponent extends BaseComponent implements OnInit, OnDestroy
     this.status = null;
     if (this.result != null) {
       this.recognizedText = result.recognizedText;
-      this.resultSubscriptionService.send(this.result.id);
+      try{
+        this.resultSubscriptionService.send(this.result.id);
+      } catch (error) {
+        console.error('Error', error);
+        this.showError('Nepavyko prisijungti prie statuso serviso.', null);
+      }
       this.progress = this.prepareProgress(this.result);
       this.status = (result.status === Status.Completed) ? null : result.status;
     }
