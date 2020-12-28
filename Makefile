@@ -28,21 +28,30 @@ build: updateVersion $(dist_dir)/.build
 #####################################################################################
 serve-local:
 	docker run -p $(port):80 -v $(dist_dir)/html:/usr/share/nginx/html nginx:1.17.9
+serve-local-prepared: 
+	cp example/index.html $(dist_dir)/
+	docker run -p $(port):80 -v $(dist_dir):/usr/share/nginx/html nginx:1.17.9	
 #####################################################################################
 files=main-es5.js main-es2015.js polyfills-es5.js polyfills-es2015.js runtime-es5.js runtime-es2015.js \
-	3rdpartylicenses.txt styles.css info
-list_files=$(patsubst %, $(dist_dir)/tts/%, $(files))
-$(dist_dir)/list/%: $(dist_dir)/html/% | $(dist_dir)/list
+	3rdpartylicenses.txt styles.css info scripts.js WebAudioRecorderWav.min.js
+trans_files=$(patsubst %, $(dist_dir)/trans/%, $(files))
+$(dist_dir)/trans/3rdpartylicenses.txt: $(dist_dir)/html/3rdpartylicenses.txt | $(dist_dir)/trans
+	cp $(dist_dir)/html/3rdpartylicenses.txt $@	
+	printf "\n\n\nwavesurfer\n" >> $@ && cat Licenses/LICENSE.wavesurfer >> $@
+	printf "\n\n\nWebAudioRecorder\n" >> $@ && cat Licenses/LICENSE.WebAudioRecorder >> $@
+$(dist_dir)/trans/%: $(dist_dir)/html/% | $(dist_dir)/trans
 	cp $< $@
-$(dist_dir)/list/info: $(dist_dir)/list | $(dist_dir)/list
+$(dist_dir)/trans/%: $(dist_dir)/html/trans/% | $(dist_dir)/trans
+	cp $< $@
+$(dist_dir)/trans/info: $(dist_dir)/trans | $(dist_dir)/trans
 	echo version : $(version) > $@
-	echo date    : $(shell date) >> $@
+	echo date    : $(shell date --rfc-3339=seconds) >> $@
 
-pack: list-component-$(version).tar.gz
-$(dist_dir)/list:
+pack: trans-component-$(version).tar.gz
+$(dist_dir)/trans:
 	mkdir -p $@
-list-component-$(version).tar.gz: $(list_files) $(dist_dir)/.build | $(dist_dir)/list
-	tar -czf $@ -C $(dist_dir) list
+trans-component-$(version).tar.gz: $(trans_files) $(dist_dir)/.build | $(dist_dir)/trans
+	tar -czf $@ -C $(dist_dir) trans
 #####################################################################################
 clean:
 	rm -rf $(dist_dir)

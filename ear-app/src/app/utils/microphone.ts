@@ -54,7 +54,7 @@ export class WebSurferMicrophone implements Microphone {
                 const audioContext = new AudioContext();
                 const input = audioContext.createMediaStreamSource(stream);
                 this.recorder = new WebAudioRecorder(input, {
-                    workerDir: 'assets/',
+                    workerDir: 'trans/',
                     numChannels: 1,
                     encoding: 'wav',
                     onEncoderLoading: (recorder, encoding) => {

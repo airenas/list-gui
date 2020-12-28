@@ -23,7 +23,7 @@
               "src/favicon.ico",
               "src/assets",
               { "glob": "WebAudioRecorderWav.min.js", "input": "node_modules/web-audio-recorder-js/lib-minified/", 
-                "output": "assets/" }  
+                "output": "trans/" }  
             ],
             "styles": [
               {
