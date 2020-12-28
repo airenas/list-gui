@@ -13,15 +13,18 @@ export class AppComponent implements OnInit {
   // tslint:disable-next-line: no-input-rename
   @Input('transcription-id') transcriptionID: string;
 
-  constructor(protected config: Config, private router: Router) { }
+  constructor(public config: Config, private router: Router) { }
 
   ngOnInit() {
+    this.doDefaultRoute();
+  }
+
+  public doDefaultRoute() {
     console.log('ServiceURL=' + this.serviceURL);
     if (this.serviceURL !== '') {
       this.config.init(this.serviceURL);
     }
     if (this.transcriptionID && this.transcriptionID !== '') {
-      this.config.init(this.serviceURL);
       this.router.navigateByUrl('/results/' + this.transcriptionID, {skipLocationChange: true});
     } else {
       this.router.navigateByUrl('/upload', {skipLocationChange: true});

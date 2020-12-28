@@ -1,5 +1,3 @@
-import { loadavg } from "os";
-
 export class PathUtils {
     public static addURL(s1: string, s2: string): string {
         if (s1 && s2 && s1.length > 0 && s2.length > 0) {
