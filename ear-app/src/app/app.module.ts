@@ -65,7 +65,7 @@ import { createCustomElement } from '@angular/elements';
 export class AppModule {
   constructor(private injector: Injector) {
     const el = createCustomElement(AppComponent, { injector });
-    customElements.define('app-list', el);
+    customElements.define('transcription-app', el);
   }
   ngDoBootstrap() { }
 }
