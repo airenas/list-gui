@@ -13,6 +13,8 @@ import { Microphone, MicrophoneFactory } from '../utils/microphone';
 import { environment } from 'src/environments/environment';
 import { Recognizer } from '../api/recognizer';
 import 'rxjs/add/observable/interval';
+import { of } from 'rxjs/internal/observable/of';
+import {createFFmpeg, fetchFile} from '@ffmpeg/ffmpeg';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -20,6 +22,10 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
 }
+
+const AudioType = 0;
+const PhoneAudioType = 1;
+const VideoType = 2;
 
 @Component({
   selector: 'app-upload',
@@ -148,28 +154,72 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   upload() {
     // console.log('sending this to server', this.selectedFile);
     this.sending = true;
-    this.transcriptionService.sendFile({
-      file: this.selectedFile, fileName: this.selectedFileName, email: this.email,
-      recognizer: this.recognizer(this.inputIndex),
-      speakerCount: (this.speakerCount === '-' ? '' : this.speakerCount),
-      skipNumJoin: this._uploadParamSkipNumJoin
-    })
-      .subscribe(
-        result => {
-          this.sending = false;
-          this.onResult(result);
-        },
-        error => {
-          this.sending = false;
-          this.showError('Nepavyko nusiųsti failo.', error);
+
+    let fo = of(this.selectedFile);
+    if (this.inputIndex === VideoType) {
+      fo = this.convertFile(this.selectedFile);
+    }
+    fo.subscribe({
+      next: (file) => {
+        this.transcriptionService.sendFile({
+          file: file, fileName: this.selectedFileName, email: this.email,
+          recognizer: this.recognizer(this.inputIndex),
+          speakerCount: (this.speakerCount === '-' ? '' : this.speakerCount),
+          skipNumJoin: this._uploadParamSkipNumJoin
+        })
+          .subscribe(
+            result => {
+              this.sending = false;
+              this.onResult(result);
+            },
+            error => {
+              this.sending = false;
+              this.showError('Nepavyko nusiųsti failo.', error);
+            }
+          );
+      },
+      error: (error) => {
+        this.sending = false;
+        this.showError('Nepavyko konvertuoti failą.', error);
+      }
+    });
+  }
+
+  convertFile(file: File): Observable<File> {
+    let ffmpeg: any;
+    return new Observable((observer) => {
+      const transcode = async (f) => {
+        try {
+          if (ffmpeg === undefined) {
+            const ffmpegTmp = createFFmpeg({
+              log: true,
+              // corePath: 'dist/ffmpeg-core.js'
+            });
+            console.log('Loading ffmpeg-core.js');
+            await ffmpegTmp.load();
+            console.log('Loaded ffmpeg-core.js');
+            ffmpeg = ffmpegTmp;
+          }
+          ffmpeg.FS('writeFile', 'in.mp4', await fetchFile(f));
+          console.log('Start copy audio');
+          await ffmpeg.run('-i', 'in.mp4', '-map', '0:a', '-acodec', 'copy', 'output.mp4');
+          console.log('Preparing file');
+          const data = ffmpeg.FS('readFile', 'output.mp4');
+          const newFile = new File([data], 'audio.mp4');
+
+          observer.next(newFile);
+        } catch (e) {
+          observer.error(e);
         }
-      );
+      }
+      transcode(file);
+    });
   }
 
   onResult(result: SendFileResult) {
     this.fileChange(null);
     this.showInfo('Failas nusiųstas. Transkripcijos ID: ' + result.id);
-    this.router.navigateByUrl('/results/' + result.id, {skipLocationChange: true});
+    this.router.navigateByUrl('/results/' + result.id, { skipLocationChange: true });
   }
 
   get inputIndex(): number {
