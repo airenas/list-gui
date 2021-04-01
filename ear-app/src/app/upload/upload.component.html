@@ -2,46 +2,79 @@
   <mat-card-content>
     <div class="stepper">
       <div>
-        <div (click)="showVersion()" class="stepper-circle">1</div>
+        <div class="stepper-circle">1</div>
         <div class="stepper-line"></div>
       </div>
-      <div>
-        <div class="stepper-title">El. paštas rezultatams</div>
-        <mat-form-field class="full-width" class="upload-input-width">
-          <input id="emailInput" name="email" matInput [(ngModel)]="email" placeholder="El. paštas" type="email"
-            matTooltip="Įveskite el. paštą">
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="stepper">
-      <div>
-        <div class="stepper-circle">2</div>
-        <div class="stepper-line"></div>
-      </div>
-      <div>
-        <div class="stepper-title">Garso failas arba įrašymas</div>
-        <div class="upload-input-width">
-          <div class="upload-file-container">
-            <mat-form-field class="upload-file-control">
-              <input id="hiddenFileInput" hidden type="file" accept=".wav,.mp3,.mp4,.m4a"
-                (change)="filesChange($event.target.files)">
-              <input id="fileInput" matInput placeholder="Failas" readonly="true" [(ngModel)]="selectedFileName"
-                (click)="openInput()" matTooltip="Pasirinkite failą">
-            </mat-form-field>
-            <button class="upload-select-button" id="selectFileButton" mat-button (click)="openInput()">
-              <i class="material-icons">attachment</i>
-            </button>
+      <div class="inner-tab-div">
+        <mat-tab-group [(selectedIndex)]="inputIndex">
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <span class="stepper-title">Įrašas</span>
+            </ng-template>
+            <div class="info-text">Pasirinkite audio failą arba įrašykite</div>
+            <div class="upload-input-width">
+              <div class="upload-file-container">
+                <mat-form-field class="upload-file-control">
+                  <input id="hiddenFileInput" hidden type="file" accept=".wav,.mp3,.m4a"
+                    (change)="filesChange($event.target.files)">
+                  <input id="fileInput" matInput placeholder="Failas" readonly="true" [(ngModel)]="selectedFileName"
+                    (click)="openInput()" matTooltip="Pasirinkite audio failą">
+                </mat-form-field>
+                <button class="upload-select-button" id="selectFileButton" mat-button (click)="openInput()">
+                  <i class="material-icons">attachment</i>
+                </button>
 
-            <button *ngIf="!recorder.recording" class="mic-button" id="startRecordButton" color="primary" mat-button
-              [disabled]="canStopAudio()" (click)="startRecord()">
-              <i class="material-icons">mic</i>
-            </button>
-            <button *ngIf="recorder.recording" class="mic-button" color="warn" id="stopRecordButton" mat-button
-              (click)="stopRecord()">
-              <i class="material-icons">stop</i>
-            </button>
-          </div>
-        </div>
+                <button *ngIf="!recorder.recording" class="mic-button" id="startRecordButton" color="primary" mat-button
+                  [disabled]="canStopAudio()" (click)="startRecord()">
+                  <i class="material-icons">mic</i>
+                </button>
+                <button *ngIf="recorder.recording" class="mic-button" color="warn" id="stopRecordButton" mat-button
+                  (click)="stopRecord()">
+                  <i class="material-icons">stop</i>
+                </button>
+              </div>
+            </div>
+          </mat-tab>
+
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <span class="stepper-title">Tel. įrašas</span>
+            </ng-template>
+            <div class="info-text">Pasirinkite telefoninės kokybės audio failą</div>
+            <div class="upload-input-width">
+              <div class="upload-file-container">
+                <mat-form-field class="upload-file-control">
+                  <input id="hiddenFileInputPhone" hidden type="file" accept=".wav,.mp3,.m4a"
+                    (change)="filesChange($event.target.files)">
+                  <input id="fileInputPhone" matInput placeholder="Failas" readonly="true"
+                    [(ngModel)]="selectedFileName" (click)="openInputPhone()" matTooltip="Pasirinkite tel. kokybės audio failą">
+                </mat-form-field>
+                <button class="upload-select-button" id="selectFileButtonPhone" mat-button (click)="openInputPhone()">
+                  <i class="material-icons">attachment</i>
+                </button>
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <span class="stepper-title">Video</span>
+            </ng-template>
+            <div class="info-text">Pasirinkite video (Microsoft Teams) failą.</div>
+            <div class="upload-input-width">
+              <div class="upload-file-container">
+                <mat-form-field class="upload-file-control">
+                  <input id="hiddenFileInputVideo" hidden type="file" accept=".mp4"
+                    (change)="filesChange($event.target.files)">
+                  <input id="fileInputVideo" matInput placeholder="Failas" readonly="true"
+                    [(ngModel)]="selectedFileName" (click)="openInputVideo()" matTooltip="Pasirinkite video failą">
+                </mat-form-field>
+                <button class="upload-select-button" id="selectFileButton" mat-button (click)="openInputVideo()">
+                  <i class="material-icons">attachment</i>
+                </button>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
         <div [hidden]="recorder.recording || selectedFile == null">
           <div class="audio-control">
             <div id="audioWaveDiv" class="audio-wave"></div>
@@ -54,7 +87,8 @@
               <i class="material-icons">stop</i>
             </button>
           </div>
-          <div id="fileSizeDiv" *ngIf="selectedFile" class="file-size-div">Dydis: {{selectedFile.size | filesize}}</div>
+          <div id="fileSizeDiv" *ngIf="selectedFile" class="file-size-div">Dydis: {{selectedFile.size | filesize}}
+          </div>
         </div>
         <div [hidden]="!recorder.recording">
           <div class="mic-audio-control">
@@ -65,24 +99,7 @@
     </div>
     <div class="stepper">
       <div>
-        <div class="stepper-circle">3</div>
-        <div class="stepper-line"></div>
-      </div>
-      <div>
-        <div class="stepper-title">Atpažintuvas</div>
-        <mat-form-field class="full-width" class="upload-input-width">
-          <mat-select id="recognizerSelect" name="recognizer" matInput [(ngModel)]="recognizer"
-            matTooltip="Pasirinkite atpažintuvą">
-            <mat-option *ngFor="let rec of recognizers" [value]="rec.id" matTooltip="{{rec.description}}"
-              id="recognizerOption-{{rec.id}}">{{rec.name}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="stepper">
-      <div>
-        <div class="stepper-circle">4</div>
+        <div class="stepper-circle">2</div>
         <div class="stepper-line"></div>
       </div>
       <div>
@@ -99,11 +116,23 @@
     </div>
     <div class="stepper">
       <div>
-        <div class="stepper-circle">5</div>
+        <div (click)="showVersion()" class="stepper-circle">3</div>
         <div class="stepper-line"></div>
       </div>
       <div>
-        <div class="stepper-title">Siuntimas transkripcijai</div>
+        <div class="stepper-title">El. paštas rezultatams</div>
+        <mat-form-field class="full-width" class="upload-input-width">
+          <input id="emailInput" name="email" matInput [(ngModel)]="email" placeholder="El. paštas" type="email"
+            matTooltip="Įveskite el. paštą">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="stepper">
+      <div>
+        <div class="stepper-circle">4</div>
+        <div class="stepper-line"></div>
+      </div>
+      <div class="button-send-div">
         <button *ngIf="!sending" id="uploadButton" mat-raised-button color="primary" [disabled]="!isValid()"
           (click)="upload()">Siųsti</button>
         <mat-progress-spinner id="uploadSpinner" *ngIf="sending" class="upload-spinner" color="primary"

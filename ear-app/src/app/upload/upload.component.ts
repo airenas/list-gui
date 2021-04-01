@@ -43,6 +43,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   sending = false;
   versionClick = 0;
   destroyind: boolean;
+  inputIndexInt: number;
 
   private _recognizer: string;
   recognizers: Recognizer[];
@@ -52,6 +53,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
 
   ngOnInit() {
     console.log('Init upload');
+    this.inputIndexInt = 0;
     this.audioPlayer = this.audioPlayerFactory.create('#audioWaveDiv', (ev) => this.cdr.detectChanges());
     this.recorder = this.microphoneFactory.create('#micWaveDiv', (ev, data) => this.recordEvent(ev, data));
     this._email = this.paramsProviderService.getEmail();
@@ -132,6 +134,14 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     document.getElementById('hiddenFileInput').click();
   }
 
+  openInputVideo() {
+    document.getElementById('hiddenFileInputVideo').click();
+  }
+
+  openInputPhone() {
+    document.getElementById('hiddenFileInputPhone').click();
+  }
+
   filesChange(files: File[]) {
     if (files.length > 0) {
       this.fileChange(files[0]);
@@ -176,6 +186,15 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     this.fileChange(null);
     this.showInfo('Failas nusiųstas. Transkripcijos ID: ' + result.id);
     this.router.navigateByUrl('/results/' + result.id, {skipLocationChange: true});
+  }
+
+  get inputIndex(): number {
+    return this.inputIndexInt;
+  }
+
+  set inputIndex(value: number) {
+    this.inputIndexInt = value;
+    this.fileChange(null);
   }
 
   get email(): string {
