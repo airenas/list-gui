@@ -53,7 +53,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
 
   ngOnInit() {
     console.log('Init upload');
-    this.inputIndexInt = 0;
+    this.inputIndexInt = this.paramsProviderService.getInputMethod();
     this.audioPlayer = this.audioPlayerFactory.create('#audioWaveDiv', (ev) => this.cdr.detectChanges());
     this.recorder = this.microphoneFactory.create('#micWaveDiv', (ev, data) => this.recordEvent(ev, data));
     this._email = this.paramsProviderService.getEmail();
@@ -194,6 +194,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
 
   set inputIndex(value: number) {
     this.inputIndexInt = value;
+    this.paramsProviderService.setInputMethod(value);
     this.fileChange(null);
   }
 

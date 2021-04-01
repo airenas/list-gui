@@ -12,6 +12,8 @@ export abstract class ParamsProviderService {
   abstract getRecognizer(): string;
   abstract setSpeakerCount(speakerCount: string): void;
   abstract getSpeakerCount(): string;
+  abstract setInputMethod(inp: number): void;
+  abstract getInputMethod(): number;
 }
 
 @Injectable()
@@ -23,8 +25,19 @@ export class LocalStorageParamsProviderService implements ParamsProviderService 
   private _email: string;
   private _recognizer: string;
   private _speakerCount: string;
+  private _inputMethod: number;
 
   constructor() {
+  }
+  setInputMethod(inp: number): void {
+    this._inputMethod = inp;
+    localStorage.setItem('inputMethod', inp.toString());
+  }
+  getInputMethod(): number {
+    if (this._inputMethod == null) {
+      this._inputMethod = this.getNumber('inputMethod');
+    }
+    return this._inputMethod;
   }
   setSpeakerCount(speakerCount: string): void {
     this._speakerCount = speakerCount;
@@ -72,5 +85,13 @@ export class LocalStorageParamsProviderService implements ParamsProviderService 
       this._recognizer = localStorage.getItem('recognizer');
     }
     return this._recognizer;
+  }
+
+  getNumber(key: string): number {
+    const val = localStorage.getItem(key);
+    if (val) {
+      return Number(val);
+    }
+    return null;
   }
 }
