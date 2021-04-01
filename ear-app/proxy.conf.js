@@ -1,20 +1,20 @@
 const PROXY_CONFIG = {
   "/transcriber/": {
-    "target": "http://localhost:80/ausis",
+    "target": "https://atpazinimas.intelektika.lt/ausis",
     "secure": false
     //"pathRewrite": {"^/transcriber": ""}
   },
   "/status.service/": {
-    "target": "http://localhost:80/ausis",
+    "target": "https://atpazinimas.intelektika.lt/ausis",
     "secure": false
     //"pathRewrite": {"^/result.provider": ""}
   },
   "/result.service/": {
-    "target": "http://localhost:80/ausis",
+    "target": "https://atpazinimas.intelektika.lt/ausis",
     "secure": false
   },
   "/status.service/subscribe": {
-    "target": "ws://localhost:80/ausis",
+    "target": "wss://atpazinimas.intelektika.lt/ausis",
     "secure": false,
     "ws": true,
     "logLevel": "debug"
