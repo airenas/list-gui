@@ -31,6 +31,7 @@ import { WebsocketURLProviderService } from './service/websocket-urlprovider.ser
 import { MicrophoneFactory } from './utils/microphone';
 import { EditorURLProviderService } from './service/editor-urlprovider.service';
 import { createCustomElement } from '@angular/elements';
+import { Mp4ExtratorService, FFMpegMp4ExtratorService } from './service/mp4-extrator.service';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { createCustomElement } from '@angular/elements';
     { provide: ParamsProviderService, useClass: LocalStorageParamsProviderService },
     { provide: ResultSubscriptionService, useClass: WSResultSubscriptionService },
     { provide: TranscriptionService, useClass: HttpTranscriptionService },
+    { provide: Mp4ExtratorService, useClass: FFMpegMp4ExtratorService },
     { provide: AudioPlayerFactory, useClass: AudioPlayerFactory },
     { provide: MicrophoneFactory, useClass: MicrophoneFactory },
     { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },

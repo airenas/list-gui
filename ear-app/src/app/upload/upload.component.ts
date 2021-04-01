@@ -11,10 +11,10 @@ import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { AudioPlayer, AudioPlayerFactory } from '../utils/audio.player';
 import { Microphone, MicrophoneFactory } from '../utils/microphone';
 import { environment } from 'src/environments/environment';
-import { Recognizer } from '../api/recognizer';
 import 'rxjs/add/observable/interval';
 import { of } from 'rxjs/internal/observable/of';
-import {createFFmpeg, fetchFile} from '@ffmpeg/ffmpeg';
+import { FileUtils } from '../utils/file';
+import { Mp4ExtratorService } from '../service/mp4-extrator.service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -37,7 +37,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     private router: Router, protected snackBar: MatSnackBar, private paramsProviderService: ParamsProviderService,
     private cdr: ChangeDetectorRef, private audioPlayerFactory: AudioPlayerFactory,
     private microphoneFactory: MicrophoneFactory,
-    private route: ActivatedRoute) {
+    private route: ActivatedRoute, private mp4Extractor: Mp4ExtratorService) {
     super(transcriptionService, snackBar);
   }
 
@@ -49,6 +49,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   sending = false;
   versionClick = 0;
   destroyind: boolean;
+  cancelingRecording = false;
   inputIndexInt: number;
 
   private _speakerCount: string;
@@ -79,10 +80,15 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   ngOnDestroy() {
     console.log('Destroy upload');
     this.destroyind = true;
+    this.cancelRecording();
+    this.audioPlayer.destroy();
+  }
+
+  cancelRecording() {
     if (this.recorder.recording) {
+      this.cancelingRecording = true;
       this.recorder.stop();
     }
-    this.audioPlayer.destroy();
   }
 
   initSpeakerCount() {
@@ -99,24 +105,13 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
 
   recordEvent(ev: string, data: any): void {
     console.log('recordEvent: ' + ev);
-    if (this.destroyind) {
+    if (this.destroyind || this.cancelingRecording) {
       return;
     }
     if (ev === 'data') {
-      this.fileChange(this.newFile(data));
+      this.fileChange(FileUtils.fromData(data, 'audio.wav'));
     } else if (ev === 'error') {
       this.showError('Nepavyko inicializuoti mikrofono.', data);
-    }
-  }
-
-  newFile(data: any): any {
-    try {
-      return new File([data], 'audio.wav');
-    } catch (e) { // workaround for edge
-      const file = new Blob([data]);
-      file['lastModifiedDate'] = new Date();
-      file['name'] = 'audio.wav';
-      return file;
     }
   }
 
@@ -157,7 +152,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
 
     let fo = of(this.selectedFile);
     if (this.inputIndex === VideoType) {
-      fo = this.convertFile(this.selectedFile);
+      fo = this.mp4Extractor.extract(this.selectedFile);
     }
     fo.subscribe({
       next: (file) => {
@@ -185,41 +180,14 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     });
   }
 
-  convertFile(file: File): Observable<File> {
-    let ffmpeg: any;
-    return new Observable((observer) => {
-      const transcode = async (f) => {
-        try {
-          if (ffmpeg === undefined) {
-            const ffmpegTmp = createFFmpeg({
-              log: true,
-              // corePath: 'dist/ffmpeg-core.js'
-            });
-            console.log('Loading ffmpeg-core.js');
-            await ffmpegTmp.load();
-            console.log('Loaded ffmpeg-core.js');
-            ffmpeg = ffmpegTmp;
-          }
-          ffmpeg.FS('writeFile', 'in.mp4', await fetchFile(f));
-          console.log('Start copy audio');
-          await ffmpeg.run('-i', 'in.mp4', '-map', '0:a', '-acodec', 'copy', 'output.mp4');
-          console.log('Preparing file');
-          const data = ffmpeg.FS('readFile', 'output.mp4');
-          const newFile = new File([data], 'audio.mp4');
-
-          observer.next(newFile);
-        } catch (e) {
-          observer.error(e);
-        }
-      }
-      transcode(file);
-    });
-  }
-
   onResult(result: SendFileResult) {
     this.fileChange(null);
     this.showInfo('Failas nusiųstas. Transkripcijos ID: ' + result.id);
     this.router.navigateByUrl('/results/' + result.id, { skipLocationChange: true });
+  }
+
+  turnAudioInput() {
+    this.inputIndex = AudioType;
   }
 
   get inputIndex(): number {
@@ -227,6 +195,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   set inputIndex(value: number) {
+    this.cancelRecording();
     this.inputIndexInt = value;
     this.paramsProviderService.setInputMethod(value);
     this.fileChange(null);
@@ -294,6 +263,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
 
   startRecord() {
     this.fileChange(null);
+    this.cancelingRecording = false;
     this.recorder.start();
   }
 
