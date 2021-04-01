@@ -14,7 +14,7 @@
             <div class="info-text">Šis pasirinkimas geriausiai tinka, jei turite geros kokybės audio įrašą arba norite
               patys įrašyti</div>
             <div class="upload-input-width">
-              <div class="upload-file-container">
+              <div class="upload-file-container file-input" appFileDnd (fileDropped)="filesChange($event)">
                 <mat-form-field class="upload-file-control">
                   <input id="hiddenFileInput" hidden type="file" accept=".wav,.mp3,.m4a,.mp4"
                     (change)="filesChange($event.target.files)">
@@ -41,10 +41,11 @@
             <ng-template mat-tab-label>
               <span class="stepper-title">Tel. įrašas</span>
             </ng-template>
-            <div class="info-text">Šis pasirinkimas rekomenduojamas, kai turimas audio įrašas yra žemos (8 kHz) kokybės, pvz.:
+            <div class="info-text">Šis pasirinkimas rekomenduojamas, kai turimas audio įrašas yra žemos (8 kHz) kokybės,
+              pvz.:
               telefoninis įrašas</div>
             <div class="upload-input-width">
-              <div class="upload-file-container">
+              <div class="upload-file-container file-input" appFileDnd (fileDropped)="filesChange($event)">
                 <mat-form-field class="upload-file-control">
                   <input id="hiddenFileInputPhone" hidden type="file" accept=".wav,.mp3,.m4a,.mp4"
                     (change)="filesChange($event.target.files)">
@@ -62,17 +63,20 @@
             <ng-template mat-tab-label>
               <span class="stepper-title">Video</span>
             </ng-template>
-            <div class="info-text">Šis pasirinkimas tinka, jei neturite atskiro audio įrašo, o tik kartu su video (.mp4) failu. 
-              Pvz.: turite Microsoft Teams susitikimo įrašą. Pastaba: šis būdas veikia tik asmeniniuose kompiuteriuose. Jei norite
-              transkribuoti video failą naudodamiesi telefonu ar planšetiniu kompiuteriu, 
+            <div class="info-text">Šis pasirinkimas tinka, jei neturite atskiro audio įrašo, o tik kartu su video (.mp4)
+              failu.
+              Pvz.: turite Microsoft Teams susitikimo įrašą. Pastaba: šis būdas veikia tik asmeniniuose kompiuteriuose.
+              Jei norite
+              transkribuoti video failą naudodamiesi telefonu ar planšetiniu kompiuteriu,
               rinkitės <a href="javascript: void(0);" (click)="turnAudioInput()">Įrašas</a> siuntimo variantą</div>
             <div class="upload-input-width">
-              <div class="upload-file-container">
+              <div class="upload-file-container file-input" appFileDnd (fileDropped)="filesChange($event)">
                 <mat-form-field class="upload-file-control">
                   <input id="hiddenFileInputVideo" hidden type="file" accept=".mp4"
                     (change)="filesChange($event.target.files)">
                   <input id="fileInputVideo" matInput placeholder="Failas" readonly="true"
-                    [(ngModel)]="selectedFileName" (click)="openInputVideo()" matTooltip="Pasirinkite video failą">
+                    [(ngModel)]="selectedFileName" (click)="openInputVideo()"
+                    matTooltip="Pasirinkite arba užtempkite video failą">
                 </mat-form-field>
                 <button class="upload-select-button" id="selectFileButton" mat-button (click)="openInputVideo()">
                   <i class="material-icons">attachment</i>

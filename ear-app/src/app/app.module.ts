@@ -32,6 +32,7 @@ import { MicrophoneFactory } from './utils/microphone';
 import { EditorURLProviderService } from './service/editor-urlprovider.service';
 import { createCustomElement } from '@angular/elements';
 import { Mp4ExtratorService, FFMpegMp4ExtratorService } from './service/mp4-extrator.service';
+import { DndDirective } from './dnd.directive';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { Mp4ExtratorService, FFMpegMp4ExtratorService } from './service/mp4-extr
     UploadComponent,
     ResultsComponent,
     StatusHumanPipe,
-    ResultTextPipe
+    ResultTextPipe,
+    DndDirective
   ],
   imports: [
     BrowserModule,
