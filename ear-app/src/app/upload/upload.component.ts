@@ -45,8 +45,6 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   destroyind: boolean;
   inputIndexInt: number;
 
-  private _recognizer: string;
-  recognizers: Recognizer[];
   private _speakerCount: string;
   speakerCountValues: SpeakerCount[];
   _uploadParamSkipNumJoin = false;
@@ -57,7 +55,6 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     this.audioPlayer = this.audioPlayerFactory.create('#audioWaveDiv', (ev) => this.cdr.detectChanges());
     this.recorder = this.microphoneFactory.create('#micWaveDiv', (ev, data) => this.recordEvent(ev, data));
     this._email = this.paramsProviderService.getEmail();
-    this.initRecognizer();
     this.initSpeakerCount();
     this.initParams();
   }
@@ -80,19 +77,6 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
       this.recorder.stop();
     }
     this.audioPlayer.destroy();
-  }
-
-  initRecognizer() {
-    this.transcriptionService.getRecognizers().subscribe(
-      result => {
-        this.recognizers = result;
-        this.recognizers.sort((a, b) => (a.name > b.name) ? 1 : -1);
-      },
-      error => {
-        this.showError('Nepavyko gauti atpažintuvų sąrašo.', error);
-      }
-    );
-    this._recognizer = this.paramsProviderService.getRecognizer();
   }
 
   initSpeakerCount() {
@@ -166,7 +150,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     this.sending = true;
     this.transcriptionService.sendFile({
       file: this.selectedFile, fileName: this.selectedFileName, email: this.email,
-      recognizer: this.recognizer,
+      recognizer: this.recognizer(this.inputIndex),
       speakerCount: (this.speakerCount === '-' ? '' : this.speakerCount),
       skipNumJoin: this._uploadParamSkipNumJoin
     })
@@ -207,13 +191,18 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     this.paramsProviderService.setEmail(email);
   }
 
-  get recognizer(): string {
-    return this._recognizer;
-  }
-
-  set recognizer(recognizer: string) {
-    this._recognizer = recognizer;
-    this.paramsProviderService.setRecognizer(recognizer);
+  recognizer(index: number): string {
+    if (index === 0) {
+      return 'audioDefault';
+    }
+    if (index === 1) {
+      return 'audioPhone';
+    }
+    if (index === 2) {
+      return 'audioDefault';
+    }
+    console.error('Unknown inputIndex', index);
+    return '';
   }
 
   get speakerCount(): string {
