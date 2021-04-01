@@ -7,15 +7,16 @@
       </div>
       <div class="inner-tab-div">
         <mat-tab-group [(selectedIndex)]="inputIndex">
-          <mat-tab>
+          <mat-tab [disabled]="sending">
             <ng-template mat-tab-label>
               <span class="stepper-title">Įrašas</span>
             </ng-template>
-            <div class="info-text">Pasirinkite audio failą arba įrašykite</div>
+            <div class="info-text">Šis pasirinkimas geriausiai tinka, jei turite geros kokybės audio įrašą arba norite
+              patys įrašyti</div>
             <div class="upload-input-width">
               <div class="upload-file-container">
                 <mat-form-field class="upload-file-control">
-                  <input id="hiddenFileInput" hidden type="file" accept=".wav,.mp3,.m4a"
+                  <input id="hiddenFileInput" hidden type="file" accept=".wav,.mp3,.m4a,.mp4"
                     (change)="filesChange($event.target.files)">
                   <input id="fileInput" matInput placeholder="Failas" readonly="true" [(ngModel)]="selectedFileName"
                     (click)="openInput()" matTooltip="Pasirinkite audio failą">
@@ -36,18 +37,20 @@
             </div>
           </mat-tab>
 
-          <mat-tab>
+          <mat-tab [disabled]="sending">
             <ng-template mat-tab-label>
               <span class="stepper-title">Tel. įrašas</span>
             </ng-template>
-            <div class="info-text">Pasirinkite telefoninės kokybės audio failą</div>
+            <div class="info-text">Šis pasirinkimas rekomenduojamas, kai turimas audio įrašas yra žemos (8 kHz) kokybės, pvz.:
+              telefoninis įrašas</div>
             <div class="upload-input-width">
               <div class="upload-file-container">
                 <mat-form-field class="upload-file-control">
-                  <input id="hiddenFileInputPhone" hidden type="file" accept=".wav,.mp3,.m4a"
+                  <input id="hiddenFileInputPhone" hidden type="file" accept=".wav,.mp3,.m4a,.mp4"
                     (change)="filesChange($event.target.files)">
                   <input id="fileInputPhone" matInput placeholder="Failas" readonly="true"
-                    [(ngModel)]="selectedFileName" (click)="openInputPhone()" matTooltip="Pasirinkite tel. kokybės audio failą">
+                    [(ngModel)]="selectedFileName" (click)="openInputPhone()"
+                    matTooltip="Pasirinkite tel. kokybės audio failą">
                 </mat-form-field>
                 <button class="upload-select-button" id="selectFileButtonPhone" mat-button (click)="openInputPhone()">
                   <i class="material-icons">attachment</i>
@@ -55,11 +58,14 @@
               </div>
             </div>
           </mat-tab>
-          <mat-tab>
+          <mat-tab [disabled]="sending">
             <ng-template mat-tab-label>
               <span class="stepper-title">Video</span>
             </ng-template>
-            <div class="info-text">Pasirinkite video (Microsoft Teams) failą.</div>
+            <div class="info-text">Šis pasirinkimas rekomenduojamas, jei turite video (.mp4) failą, pvz.: Microsoft Teams
+              susitikimo įrašą. Pastaba: šis pasirinkimas veikia tik asmeniniuose kompiuteriuose. Jei norite
+              transkribuoti video failą naudodamiesi telefonu ar planšetiniu kompiuteriu, rinkitės <b>Įrašas</b> siuntimo
+              variantą</div>
             <div class="upload-input-width">
               <div class="upload-file-container">
                 <mat-form-field class="upload-file-control">
