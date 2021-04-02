@@ -4,7 +4,7 @@ dist_dir=$(CURDIR)/deploy
 port?=8000
 main_dir=ear-app
 commit_count=$(shell git rev-list --count HEAD)
-COMPONENT_VERSION?=0.1
+COMPONENT_VERSION?=0.2
 version=$(COMPONENT_VERSION).$(commit_count)
 #####################################################################################
 init: 
@@ -27,7 +27,8 @@ $(dist_dir)/.build: $(main_dir) $(main_dir)/src $(main_dir)/src/environments/env
 build: updateVersion $(dist_dir)/.build
 #####################################################################################
 serve-local:
-	docker run -p $(port):80 -v $(dist_dir)/html:/usr/share/nginx/html nginx:1.17.9
+	docker run -p $(port):80 -v $(dist_dir)/html:/usr/share/nginx/html \
+		-v $(dist_dir)/conf/nginx.conf:/etc/nginx/conf.d/default.conf nginx:1.17.9
 serve-local-prepared: 
 	cp example/index.html $(dist_dir)/
 	docker run -p $(port):80 -v $(dist_dir):/usr/share/nginx/html nginx:1.17.9	
