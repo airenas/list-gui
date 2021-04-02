@@ -106,4 +106,12 @@ describe('ParamsProviderService', () => {
     service.showErrorDetails = true;
     expect(service.showErrorDetails).toBe(true);
   }));
+  it('should remember inputMethod', inject([ParamsProviderService], (service: ParamsProviderService) => {
+    service.setInputMethod(1);
+    expect(service.getInputMethod()).toBe(1);
+  }));
+  it('should remember inputMethod from local storage', inject([ParamsProviderService], (service: ParamsProviderService) => {
+    service.setInputMethod(2);
+    expect(new LocalStorageParamsProviderService().getInputMethod()).toBe(2);
+  }));
 });

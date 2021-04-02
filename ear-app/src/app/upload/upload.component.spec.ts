@@ -191,6 +191,98 @@ describe('UploadComponent', () => {
     });
   }));
 
+  it('should navigate to Įrašas tab', async(() => {
+    component.inputIndexInt = 2;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      fixture.debugElement.query(By.css('#aIrasas')).nativeElement.click();
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(component.inputIndexInt).toBe(0);
+      });
+    });
+  }));
+
+  it('should show Tel Įrašas tab', async(() => {
+    component.inputIndexInt = 1;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#fileInputPhone')))).toBeTruthy();
+    });
+  }));
+
+  it('should show Video tab', async(() => {
+    component.inputIndexInt = 2;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#fileInput')))).toBeTruthy();
+    });
+  }));
+
+  it('should show Įrašas tab', async(() => {
+    component.inputIndexInt = 0;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#fileInput')))).toBeTruthy();
+    });
+  }));
+
+  it('should show drop Audio', async(() => {
+    component.inputIndexInt = 0;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivAudio')))).toBeTruthy();
+      component.dropFile([new FileHelper().createFakeFile()], ['.wav']);
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivAudio')))).toBeFalsy();
+        expect(component.selectedFile).toBeDefined();
+      });
+    });
+  }));
+
+  it('should clear file on wrong file drop', async(() => {
+    component.inputIndexInt = 0;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivAudio')))).toBeTruthy();
+      component.dropFile([new FileHelper().createFakeFile()], ['.txt']);
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivAudio')))).toBeTruthy();
+        expect(component.selectedFile).toBeNull();
+      });
+    });
+  }));
+
+  it('should show drop Low Audio', async(() => {
+    component.inputIndexInt = 1;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivPhone')))).toBeTruthy();
+      component.dropFile([new FileHelper().createFakeFile()], ['.wav']);
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivPhone')))).toBeFalsy();
+        expect(component.selectedFile).toBeDefined();
+      });
+    });
+  }));
+
+  it('should show drop Video', async(() => {
+    component.inputIndexInt = 2;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivVideo')))).toBeTruthy();
+      component.dropFile([new FileHelper().createFakeFile()], ['.wav']);
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivVideo')))).toBeFalsy();
+        expect(component.selectedFile).toBeDefined();
+      });
+    });
+  }));
+
   it('should hide uploadButton on sending', async(() => {
     component.fileChange(new FileHelper().createFakeFile());
     component.sending = true;
@@ -199,6 +291,12 @@ describe('UploadComponent', () => {
       expect(fixture.debugElement.query(By.css('#uploadButton'))).toBeNull();
       expect(fixture.debugElement.query(By.css('#uploadSpinner'))).toBeDefined();
     });
+  }));
+
+  it('should return correct recognizer', async(() => {
+    expect(component.recognizer(0)).toBe('audioDefault');
+    expect(component.recognizer(1)).toBe('audioPhone');
+    expect(component.recognizer(2)).toBe('audioDefault');
   }));
 
   it('should show no spinner', async(() => {
@@ -372,8 +470,14 @@ describe('UploadComponent Own Mock', () => {
   it('should read skipNumJoin param', async(() => {
     const params = new TestParamsProviderService();
     const prv = TestUtil.providers(params);
-    prv.push({ provide: ActivatedRoute, useValue: { snapshot: { queryParamMap:
-      new Map([['skipNumJoin', '1']]) } } });
+    prv.push({
+      provide: ActivatedRoute, useValue: {
+        snapshot: {
+          queryParamMap:
+            new Map([['skipNumJoin', '1']])
+        }
+      }
+    });
     TestUtil.configure(prv);
     fixture = TestBed.createComponent(UploadComponent);
     component = fixture.debugElement.componentInstance;

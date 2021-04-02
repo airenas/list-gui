@@ -90,7 +90,7 @@ export class LocalStorageParamsProviderService implements ParamsProviderService 
   getNumber(key: string): number {
     const val = localStorage.getItem(key);
     if (val) {
-      return Number(val);
+      return Number(val || '0');
     }
     return null;
   }

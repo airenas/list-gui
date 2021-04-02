@@ -16,7 +16,7 @@
             <div class="upload-input-width">
               <div class="upload-file-container-dnd file-input" appFileDnd
                 (fileDropped)="dropFile($event, ['.mp4', '.wav','.mp3','.m4a'])">
-                <div *ngIf="!selectedFile" class="dnd-div">
+                <div *ngIf="!selectedFile" class="dnd-div" id="dndDivAudio">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
                 </div>
@@ -54,7 +54,7 @@
             <div class="upload-input-width">
               <div class="upload-file-container-dnd file-input" appFileDnd
                 (fileDropped)="dropFile($event, ['.mp4', '.wav','.mp3','.m4a'])">
-                <div *ngIf="!selectedFile" class="dnd-div">
+                <div *ngIf="!selectedFile" class="dnd-div" id="dndDivPhone">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
                 </div>
@@ -82,10 +82,10 @@
               Pvz.: turite Microsoft Teams susitikimo įrašą. Pastaba: šis būdas veikia tik asmeniniuose kompiuteriuose.
               Jei norite
               transkribuoti video failą naudodamiesi telefonu ar planšetiniu kompiuteriu,
-              rinkitės <a href="javascript: void(0);" (click)="turnAudioInput()">Įrašas</a> siuntimo variantą</div>
+              rinkitės <a id="aIrasas" href="javascript: void(0);" (click)="turnAudioInput()">Įrašas</a> siuntimo variantą</div>
             <div class="upload-input-width">
               <div class="upload-file-container-dnd file-input" appFileDnd (fileDropped)="dropFile($event, ['.mp4'])">
-                <div *ngIf="!selectedFile" class="dnd-div">
+                <div *ngIf="!selectedFile" class="dnd-div" id="dndDivVideo">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
                 </div>
