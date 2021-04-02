@@ -96,6 +96,9 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     { id: '1', name: '1', tooltip: 'Vieno diktoriaus garso įrašas' },
     { id: '2', name: '2', tooltip: 'Garso įraše kalba du diktoriai' }];
     this._speakerCount = this.paramsProviderService.getSpeakerCount();
+    if ((this._speakerCount || '') === '') {
+      this._speakerCount = '-';
+    }
   }
 
   initParams() {

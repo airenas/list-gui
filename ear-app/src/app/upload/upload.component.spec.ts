@@ -313,6 +313,18 @@ describe('UploadComponent Own Mock', () => {
     });
   }));
 
+  it('should set default speakerCount value', async(() => {
+    const params = new TestParamsProviderService();
+    params.setSpeakerCount(null);
+    TestUtil.configure(TestUtil.providers(params));
+    fixture = TestBed.createComponent(UploadComponent);
+    component = fixture.debugElement.componentInstance;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(component.speakerCount).toBe('-');
+    });
+  }));
+
   it('should stop playing on destroy', async(() => {
     const params = new TestParamsProviderService();
     TestUtil.configure(TestUtil.providers(params));
