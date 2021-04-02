@@ -127,6 +127,16 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     document.getElementById('hiddenFileInputPhone').click();
   }
 
+  dropFile(files: File[], ext: string[]) {
+    for (const f of files) {
+      if (FileUtils.hasExtension(f.name, ext)) {
+        this.fileChange(f);
+        return;
+      }
+    }
+    this.fileChange(null);
+  }
+
   filesChange(files: File[]) {
     if (files.length > 0) {
       this.fileChange(files[0]);

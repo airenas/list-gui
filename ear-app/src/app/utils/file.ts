@@ -10,4 +10,14 @@ export class FileUtils {
             return file;
         }
     }
+
+    public static hasExtension(filename: string, extensions: string[]): boolean {
+        const lfn = (filename || '').toLowerCase();
+        for (const ext of extensions) {
+            if (lfn.endsWith(ext)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

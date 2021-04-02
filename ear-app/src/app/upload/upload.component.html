@@ -14,25 +14,32 @@
             <div class="info-text">Šis pasirinkimas geriausiai tinka, jei turite geros kokybės audio įrašą arba norite
               patys įrašyti</div>
             <div class="upload-input-width">
-              <div class="upload-file-container file-input" appFileDnd (fileDropped)="filesChange($event)">
-                <mat-form-field class="upload-file-control">
-                  <input id="hiddenFileInput" hidden type="file" accept=".wav,.mp3,.m4a,.mp4"
-                    (change)="filesChange($event.target.files)">
-                  <input id="fileInput" matInput placeholder="Failas" readonly="true" [(ngModel)]="selectedFileName"
-                    (click)="openInput()" matTooltip="Pasirinkite audio failą">
-                </mat-form-field>
-                <button class="upload-select-button" id="selectFileButton" mat-button (click)="openInput()">
-                  <i class="material-icons">attachment</i>
-                </button>
+              <div class="upload-file-container-dnd file-input" appFileDnd
+                (fileDropped)="dropFile($event, ['.mp4', '.wav','.mp3','.m4a'])">
+                <div *ngIf="selectedFile === null" class="dnd-div">
+                  <i class="material-icons dnd-icon">input</i>
+                  <span class="dnd-span">Įtempkite failą</span>
+                </div>
+                <div class="upload-file-container">
+                  <mat-form-field class="upload-file-control">
+                    <input id="hiddenFileInput" hidden type="file" accept=".wav,.mp3,.m4a,.mp4"
+                      (change)="filesChange($event.target.files)">
+                    <input id="fileInput" matInput placeholder="Failas" readonly="true" [(ngModel)]="selectedFileName"
+                      (click)="openInput()" matTooltip="Pasirinkite audio failą">
+                  </mat-form-field>
+                  <button class="upload-select-button" id="selectFileButton" mat-button (click)="openInput()">
+                    <i class="material-icons">attachment</i>
+                  </button>
 
-                <button *ngIf="!recorder.recording" class="mic-button" id="startRecordButton" color="primary" mat-button
-                  [disabled]="canStopAudio()" (click)="startRecord()">
-                  <i class="material-icons">mic</i>
-                </button>
-                <button *ngIf="recorder.recording" class="mic-button" color="warn" id="stopRecordButton" mat-button
-                  (click)="stopRecord()">
-                  <i class="material-icons">stop</i>
-                </button>
+                  <button *ngIf="!recorder.recording" class="mic-button" id="startRecordButton" color="primary"
+                    mat-button [disabled]="canStopAudio()" (click)="startRecord()">
+                    <i class="material-icons">mic</i>
+                  </button>
+                  <button *ngIf="recorder.recording" class="mic-button" color="warn" id="stopRecordButton" mat-button
+                    (click)="stopRecord()">
+                    <i class="material-icons">stop</i>
+                  </button>
+                </div>
               </div>
             </div>
           </mat-tab>
@@ -45,17 +52,24 @@
               pvz.:
               telefoninis įrašas</div>
             <div class="upload-input-width">
-              <div class="upload-file-container file-input" appFileDnd (fileDropped)="filesChange($event)">
-                <mat-form-field class="upload-file-control">
-                  <input id="hiddenFileInputPhone" hidden type="file" accept=".wav,.mp3,.m4a,.mp4"
-                    (change)="filesChange($event.target.files)">
-                  <input id="fileInputPhone" matInput placeholder="Failas" readonly="true"
-                    [(ngModel)]="selectedFileName" (click)="openInputPhone()"
-                    matTooltip="Pasirinkite tel. kokybės audio failą">
-                </mat-form-field>
-                <button class="upload-select-button" id="selectFileButtonPhone" mat-button (click)="openInputPhone()">
-                  <i class="material-icons">attachment</i>
-                </button>
+              <div class="upload-file-container-dnd file-input" appFileDnd
+                (fileDropped)="dropFile($event, ['.mp4', '.wav','.mp3','.m4a'])">
+                <div *ngIf="selectedFile === null" class="dnd-div">
+                  <i class="material-icons dnd-icon">input</i>
+                  <span class="dnd-span">Įtempkite failą</span>
+                </div>
+                <div class="upload-file-container">
+                  <mat-form-field class="upload-file-control">
+                    <input id="hiddenFileInputPhone" hidden type="file" accept=".wav,.mp3,.m4a,.mp4"
+                      (change)="filesChange($event.target.files)">
+                    <input id="fileInputPhone" matInput placeholder="Failas" readonly="true"
+                      [(ngModel)]="selectedFileName" (click)="openInputPhone()"
+                      matTooltip="Pasirinkite tel. kokybės audio failą">
+                  </mat-form-field>
+                  <button class="upload-select-button" id="selectFileButtonPhone" mat-button (click)="openInputPhone()">
+                    <i class="material-icons">attachment</i>
+                  </button>
+                </div>
               </div>
             </div>
           </mat-tab>
@@ -70,17 +84,23 @@
               transkribuoti video failą naudodamiesi telefonu ar planšetiniu kompiuteriu,
               rinkitės <a href="javascript: void(0);" (click)="turnAudioInput()">Įrašas</a> siuntimo variantą</div>
             <div class="upload-input-width">
-              <div class="upload-file-container file-input" appFileDnd (fileDropped)="filesChange($event)">
-                <mat-form-field class="upload-file-control">
-                  <input id="hiddenFileInputVideo" hidden type="file" accept=".mp4"
-                    (change)="filesChange($event.target.files)">
-                  <input id="fileInputVideo" matInput placeholder="Failas" readonly="true"
-                    [(ngModel)]="selectedFileName" (click)="openInputVideo()"
-                    matTooltip="Pasirinkite arba užtempkite video failą">
-                </mat-form-field>
-                <button class="upload-select-button" id="selectFileButton" mat-button (click)="openInputVideo()">
-                  <i class="material-icons">attachment</i>
-                </button>
+              <div class="upload-file-container-dnd file-input" appFileDnd (fileDropped)="dropFile($event, ['.mp4'])">
+                <div *ngIf="selectedFile === null" class="dnd-div">
+                  <i class="material-icons dnd-icon">input</i>
+                  <span class="dnd-span">Įtempkite failą</span>
+                </div>
+                <div class="upload-file-container">
+                  <mat-form-field class="upload-file-control">
+                    <input id="hiddenFileInputVideo" hidden type="file" accept=".mp4"
+                      (change)="filesChange($event.target.files)">
+                    <input id="fileInputVideo" matInput placeholder="Failas" readonly="true"
+                      [(ngModel)]="selectedFileName" (click)="openInputVideo()"
+                      matTooltip="Pasirinkite arba užtempkite video failą">
+                  </mat-form-field>
+                  <button class="upload-select-button" id="selectFileButton" mat-button (click)="openInputVideo()">
+                    <i class="material-icons">attachment</i>
+                  </button>
+                </div>
               </div>
             </div>
           </mat-tab>

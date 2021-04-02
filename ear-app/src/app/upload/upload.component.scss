@@ -32,6 +32,10 @@
   overflow: hidden;
 }
 
+.upload-file-container-dnd{
+  display: box;
+}
+
 .file-size-div {
   padding-bottom: 1.25em;
 }
@@ -127,11 +131,30 @@
     border-width: 2px;
     border-style: solid;
     border-color: mat-color($primary);
-    border-radius: 10px;
+    border-radius: 5px;
     width: calc(100% - 10px);
   }
 }
 
 .bigger-div {
   padding-bottom: 10px;
+}
+
+.dnd-div {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.dnd-span {
+  font-size: 105%;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.dnd-icon {
+  margin-right: 10px;
+  opacity: 0.7;
 }
