@@ -229,24 +229,6 @@ describe('UploadComponent', () => {
     expect(component.openInput).toHaveBeenCalled();
   }));
 
-  it('should have loaded recognizers', async(() => {
-    component = fixture.debugElement.componentInstance;
-    fixture.whenStable().then(() => {
-      expect(component.recognizers.length).toBe(1);
-    });
-  }));
-  it('should have set recognizer value', async(() => {
-    fixture.detectChanges();
-    const select = fixture.debugElement.query(By.css('#recognizerSelect')).nativeElement;
-    select.click();
-    fixture.detectChanges();
-    const matOption = fixture.debugElement.query(By.css('#recognizerOption-rID')).nativeElement;
-    matOption.click();
-    fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect(component.recognizer).toBe('rID');
-    });
-  }));
   it('should have set speakerCount values', async(() => {
     component = fixture.debugElement.componentInstance;
     fixture.whenStable().then(() => {
@@ -307,15 +289,15 @@ describe('UploadComponent Own Mock', () => {
     });
   }));
 
-  it('should read recognizer value from provider', async(() => {
+  it('should read inputType value from provider', async(() => {
     const params = new TestParamsProviderService();
-    params.setRecognizer('rID');
+    params.setInputMethod(1);
     TestUtil.configure(TestUtil.providers(params));
     fixture = TestBed.createComponent(UploadComponent);
     component = fixture.debugElement.componentInstance;
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect(component.recognizer).toBe('rID');
+      expect(component.inputIndexInt).toBe(1);
     });
   }));
 

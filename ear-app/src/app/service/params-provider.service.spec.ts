@@ -13,9 +13,16 @@ export class TestParamsProviderService implements ParamsProviderService {
   private _email: string;
   private _recognizer: string;
   private _speakerCount: string;
+  private _inpMethod: number;
 
 
   constructor() {
+  }
+  setInputMethod(inp: number): void {
+    this._inpMethod = inp;
+  }
+  getInputMethod(): number {
+    return this._inpMethod;
   }
   setSpeakerCount(speakerCount: string): void {
     this._speakerCount = speakerCount;

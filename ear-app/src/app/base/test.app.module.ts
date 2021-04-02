@@ -1,3 +1,5 @@
+import { TestMp4ExtratorService } from './../service/mp4-extrator.service.spec';
+import { Mp4ExtratorService } from './../service/mp4-extrator.service';
 import { EditorURLProviderService } from './../service/editor-urlprovider.service';
 import { MicrophoneFactory } from './../utils/microphone';
 import { MatMenuModule } from '@angular/material/menu';
@@ -102,7 +104,8 @@ export class TestHelper {
   { provide: Config, useClass: Config },
   { provide: AudioPlayerFactory, useClass: TestAudioPlayerFactory },
   { provide: MicrophoneFactory, useClass: TestMicrophoneFactory },
-  { provide: EditorURLProviderService, useClass: EditorURLProviderService }
+  { provide: EditorURLProviderService, useClass: EditorURLProviderService },
+  { provide: Mp4ExtratorService, useClass: TestMp4ExtratorService }
   ],
   bootstrap: [],
   exports: [
