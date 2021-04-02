@@ -241,6 +241,15 @@ describe('UploadComponent', () => {
     });
   }));
 
+  it('should hide drop Audio on recording', async(() => {
+    component.inputIndexInt = 0;
+    component.recorder.start();
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivAudio')))).toBeFalsy();
+    });
+  }));
+
   it('should clear file on wrong file drop', async(() => {
     component.inputIndexInt = 0;
     fixture.detectChanges();

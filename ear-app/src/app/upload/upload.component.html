@@ -16,7 +16,7 @@
             <div class="upload-input-width">
               <div class="upload-file-container-dnd file-input" appFileDnd
                 (fileDropped)="dropFile($event, ['.mp4', '.wav','.mp3','.m4a'])">
-                <div *ngIf="!selectedFile" class="dnd-div" id="dndDivAudio">
+                <div *ngIf="!recorder.recording && !selectedFile" class="dnd-div" id="dndDivAudio">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
                 </div>

@@ -43,6 +43,7 @@ export class WebSurferAudioPlayer implements AudioPlayer {
     }
   }
   play() {
+    // console.log(this.getSurfer().getDuration());
     this.getSurfer().play();
   }
   pause() {
