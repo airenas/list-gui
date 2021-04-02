@@ -16,7 +16,7 @@
             <div class="upload-input-width">
               <div class="upload-file-container-dnd file-input" appFileDnd
                 (fileDropped)="dropFile($event, ['.mp4', '.wav','.mp3','.m4a'])">
-                <div *ngIf="selectedFile === null" class="dnd-div">
+                <div *ngIf="!selectedFile" class="dnd-div">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
                 </div>
@@ -54,7 +54,7 @@
             <div class="upload-input-width">
               <div class="upload-file-container-dnd file-input" appFileDnd
                 (fileDropped)="dropFile($event, ['.mp4', '.wav','.mp3','.m4a'])">
-                <div *ngIf="selectedFile === null" class="dnd-div">
+                <div *ngIf="!selectedFile" class="dnd-div">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
                 </div>
@@ -85,7 +85,7 @@
               rinkitės <a href="javascript: void(0);" (click)="turnAudioInput()">Įrašas</a> siuntimo variantą</div>
             <div class="upload-input-width">
               <div class="upload-file-container-dnd file-input" appFileDnd (fileDropped)="dropFile($event, ['.mp4'])">
-                <div *ngIf="selectedFile === null" class="dnd-div">
+                <div *ngIf="!selectedFile" class="dnd-div">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
                 </div>
