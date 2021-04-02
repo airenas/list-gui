@@ -1,4 +1,4 @@
--include ../Makefile.options
+-include Makefile.options
 #####################################################################################
 dist_dir=$(CURDIR)/deploy
 port?=8000
@@ -28,10 +28,11 @@ build: updateVersion $(dist_dir)/.build
 #####################################################################################
 serve-local:
 	docker run -p $(port):80 -v $(dist_dir)/html:/usr/share/nginx/html \
-		-v $(dist_dir)/conf/nginx.conf:/etc/nginx/conf.d/default.conf nginx:1.17.9
+		-v $(CURDIR)/conf/nginx.conf:/etc/nginx/conf.d/default.conf nginx:1.17.9
 serve-local-prepared: 
 	cp example/index.html $(dist_dir)/
-	docker run -p $(port):80 -v $(dist_dir):/usr/share/nginx/html nginx:1.17.9	
+	docker run -p $(port):80 -v $(dist_dir):/usr/share/nginx/html \
+		-v $(CURDIR)/conf/nginx.conf:/etc/nginx/conf.d/default.conf nginx:1.17.9
 #####################################################################################
 files=main-es5.js main-es2015.js polyfills-es5.js polyfills-es2015.js runtime-es5.js runtime-es2015.js \
 	3rdpartylicenses.txt styles.css info scripts.js WebAudioRecorderWav.min.js
@@ -54,6 +55,9 @@ $(dist_dir)/trans:
 trans-component-$(version).tar.gz: $(trans_files) $(dist_dir)/.build | $(dist_dir)/trans
 	tar -czf $@ -C $(dist_dir) trans
 #####################################################################################
+put-component:
+	scp trans-component-$(version).tar.gz $(component-share)
+
 clean:
 	rm -rf $(dist_dir)
 
