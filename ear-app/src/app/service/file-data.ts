@@ -1,6 +1,5 @@
 export class FileData {
-    file: File;
-    fileName: string;
+    files: File[];
     email: string;
     recognizer: string;
     speakerCount: string;

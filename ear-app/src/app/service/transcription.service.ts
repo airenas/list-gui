@@ -57,7 +57,13 @@ export class HttpTranscriptionService implements TranscriptionService {
 
   sendFile(fileData: FileData): Observable<SendFileResult> {
     const formData = new FormData();
-    formData.append('file', fileData.file, fileData.fileName);
+    Array.from(fileData.files).forEach(function (f, i, files) {
+      let suf = '';
+      if (i > 0) {
+        suf = (i + 1).toString();
+      }
+      formData.append('file' + suf, f, f.name);
+    });
     formData.append('email', fileData.email);
     formData.append('recognizer', fileData.recognizer === '' ? '' : fileData.recognizer);
     formData.append('numberOfSpeakers', fileData.speakerCount === '' ? '' : fileData.speakerCount);

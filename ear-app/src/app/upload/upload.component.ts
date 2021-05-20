@@ -175,34 +175,38 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   upload() {
     this.sending = true;
 
-    let fo = of(this.files[0]);
     if (this.inputIndex === this.VideoType) {
-      fo = this.mp4Extractor.extract(this.files[0]);
+      this.mp4Extractor.extract(this.files[0]).subscribe({
+        next: (file) => {
+          this.uploadFiles([file]);
+        },
+        error: (error) => {
+          this.sending = false;
+          this.showError('Nepavyko konvertuoti failą.', error);
+        }
+      });
+    } else {
+      this.uploadFiles(this.files);
     }
-    fo.subscribe({
-      next: (file) => {
-        this.transcriptionService.sendFile({
-          file: file, fileName: this.selectedFileName, email: this.email,
-          recognizer: this.recognizer(this.inputIndex),
-          speakerCount: (this.speakerCount === '-' ? '' : this.speakerCount),
-          skipNumJoin: this._uploadParamSkipNumJoin
-        })
-          .subscribe(
-            result => {
-              this.sending = false;
-              this.onResult(result);
-            },
-            error => {
-              this.sending = false;
-              this.showError('Nepavyko nusiųsti failo.', error);
-            }
-          );
-      },
-      error: (error) => {
-        this.sending = false;
-        this.showError('Nepavyko konvertuoti failą.', error);
-      }
-    });
+  }
+
+  uploadFiles(files: File[]) {
+    this.transcriptionService.sendFile({
+      files: files, email: this.email,
+      recognizer: this.recognizer(this.inputIndex),
+      speakerCount: (this.speakerCount === '-' ? '' : this.speakerCount),
+      skipNumJoin: this._uploadParamSkipNumJoin
+    })
+      .subscribe(
+        result => {
+          this.sending = false;
+          this.onResult(result);
+        },
+        error => {
+          this.sending = false;
+          this.showError('Nepavyko nusiųsti failo.', error);
+        }
+      );
   }
 
   onResult(result: SendFileResult) {
@@ -236,13 +240,13 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   recognizer(index: number): string {
-    if (index === 0) {
+    if (index === this.AudioType || index === this.ZoomType) {
       return 'audioDefault';
     }
-    if (index === 1) {
+    if (index === this.PhoneAudioType) {
       return 'audioPhone';
     }
-    if (index === 2) {
+    if (index === this.VideoType) {
       return 'audioDefault';
     }
     console.error('Unknown inputIndex', index);
