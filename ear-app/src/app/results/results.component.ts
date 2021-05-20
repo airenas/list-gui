@@ -31,7 +31,7 @@ class AudioURLKeeper {
 
   setAudio(result: TranscriptionResult) {
     //    console.log('keeper ID: ' + (result == null ? 'null' : result.id));
-    if (result == null || result.status === Status.NOT_FOUND) {
+    if (result == null || result.status === Status.NOT_FOUND || !result.audioReady) {
       this.URL = null;
       this.ID = null;
       this.isAudio = false;

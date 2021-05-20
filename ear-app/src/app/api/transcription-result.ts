@@ -5,4 +5,6 @@ export interface TranscriptionResult {
     error?: string;
     recognizedText?: string;
     progress?: number;
+    audioReady?: boolean;
+    avResults?: string[];
 }
