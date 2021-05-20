@@ -58,6 +58,7 @@ class AudioURLKeeper {
 class FileURLKeeper {
 
   constructor(private config: Config) {
+    this.possibleDwnFiles = this.initPossibleFiles();
   }
 
   static latRestoredURL = 'lat.restored.txt';
@@ -72,49 +73,59 @@ class FileURLKeeper {
   latticeRestoredGz: string;
   webVTT: string;
   URLPrefix: string;
+  availableEditor = false;
+  dwnFiles: FileInfo[];
+  possibleDwnFiles: Map<string, FileInfo>;
 
-  dwnFiles = [
-    {
-      id: 'dfResult',
-      url: 'result.txt',
-      title: 'Rezultatas - paprastas (.txt)'
-    },
-    {
-      id: 'dfResultFinal',
-      url: 'resultFinal.txt',
-      title: 'Rezultatas (.txt)'
-    },
-    {
-      id: 'dfLat',
-      url: 'lat.txt',
-      title: 'Kaldi grafas (.txt)'
-    },
-    {
-      id: 'dfLatGz',
-      url: 'lat.gz',
-      title: 'Kaldi grafas (.gz)'
-    },
-    {
-      id: 'dfN10',
-      url: 'lat.nb10.txt',
-      title: 'Kaldi 10-geriausių variantų (.txt)'
-    },
-    {
-      id: 'dfLatRescore',
-      url: FileURLKeeper.latRestoredURL,
-      title: 'Grafas redagavimui (.txt)'
-    },
-    {
-      id: 'dfLatRescoreGz',
-      url: 'lat.restored.gz',
-      title: 'Grafas redagavimui (.gz)'
-    },
-    {
-      id: 'dfWebVTT',
-      url: 'webvtt.txt',
-      title: 'WebVTT (.txt)'
-    },
-  ];
+  initPossibleFiles(): Map<string, FileInfo> {
+    const values: FileInfo[] = [
+      {
+        id: 'dfResult',
+        url: 'result.txt',
+        title: 'Rezultatas - paprastas (.txt)'
+      },
+      {
+        id: 'dfResultFinal',
+        url: 'resultFinal.txt',
+        title: 'Rezultatas (.txt)'
+      },
+      {
+        id: 'dfLat',
+        url: 'lat.txt',
+        title: 'Kaldi grafas (.txt)'
+      },
+      {
+        id: 'dfLatGz',
+        url: 'lat.gz',
+        title: 'Kaldi grafas (.gz)'
+      },
+      {
+        id: 'dfN10',
+        url: 'lat.nb10.txt',
+        title: 'Kaldi 10-geriausių variantų (.txt)'
+      },
+      {
+        id: 'dfLatRescore',
+        url: FileURLKeeper.latRestoredURL,
+        title: 'Grafas redagavimui (.txt)'
+      },
+      {
+        id: 'dfLatRescoreGz',
+        url: 'lat.restored.gz',
+        title: 'Grafas redagavimui (.gz)'
+      },
+      {
+        id: 'dfWebVTT',
+        url: 'webvtt.txt',
+        title: 'WebVTT (.txt)'
+      },
+    ];
+    const res = new Map<string, FileInfo>();
+    values.forEach(function (f, i, files) {
+      res.set(f.url, f);
+    });
+    return res;
+  }
 
   setID(result: TranscriptionResult) {
     this.contains = false;
@@ -124,6 +135,13 @@ class FileURLKeeper {
     }
     this.contains = true;
     this.URLPrefix = this.config.resultUrl + result.id;
+    const avResults = result.avResults ? result.avResults : [];
+    this.availableEditor = avResults.indexOf(FileURLKeeper.latRestoredURL) > -1;
+    this.dwnFiles = this.getDwnFiles(this.possibleDwnFiles, avResults);
+  }
+
+  getDwnFiles(possibleDwnFiles: Map<string, FileInfo>, avResults: string[]): FileInfo[] {
+    return avResults.map(v => possibleDwnFiles.get(v)).filter(v => v);
   }
 
   getURL(URLSufix: string) {
@@ -272,4 +290,10 @@ export class ResultsComponent extends BaseComponent implements OnInit, OnDestroy
     console.log('Editor: ' + decodeURIComponent(url));
     window.open(url);
   }
+}
+
+interface FileInfo {
+  id: string;
+  url: string;
+  title: string;
 }
