@@ -33,6 +33,7 @@ import { EditorURLProviderService } from './service/editor-urlprovider.service';
 import { createCustomElement } from '@angular/elements';
 import { Mp4ExtratorService, FFMpegMp4ExtratorService } from './service/mp4-extrator.service';
 import { DndDirective } from './dnd.directive';
+import { AudioComponent } from './audio/audio.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { DndDirective } from './dnd.directive';
     ResultsComponent,
     StatusHumanPipe,
     ResultTextPipe,
-    DndDirective
+    DndDirective,
+    AudioComponent
   ],
   imports: [
     BrowserModule,

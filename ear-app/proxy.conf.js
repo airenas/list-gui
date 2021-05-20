@@ -1,20 +1,20 @@
 const PROXY_CONFIG = {
   "/transcriber/": {
-    "target": "https://atpazinimas.intelektika.lt/ausis",
+    "target": "https://list.airenas.eu:7080/ausis",
     "secure": false
     //"pathRewrite": {"^/transcriber": ""}
   },
   "/status.service/": {
-    "target": "https://atpazinimas.intelektika.lt/ausis",
+    "target": "https://list.airenas.eu:7080/ausis",
     "secure": false
     //"pathRewrite": {"^/result.provider": ""}
   },
   "/result.service/": {
-    "target": "https://atpazinimas.intelektika.lt/ausis",
+    "target": "https://list.airenas.eu:7080/ausis",
     "secure": false
   },
   "/status.service/subscribe": {
-    "target": "wss://atpazinimas.intelektika.lt/ausis",
+    "target": "wss://list.airenas.eu:7080/ausis",
     "secure": false,
     "ws": true,
     "logLevel": "debug"

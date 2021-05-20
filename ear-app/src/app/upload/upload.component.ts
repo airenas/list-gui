@@ -26,6 +26,7 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 const AudioType = 0;
 const PhoneAudioType = 1;
 const VideoType = 2;
+const ZoomType = 3;
 
 @Component({
   selector: 'app-upload',
@@ -41,7 +42,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     super(transcriptionService, snackBar);
   }
 
-  selectedFile: File; // hold our file
+  files: File[];
   selectedFileName: string; // hold our file name
   private _email: string;
   recorder: Microphone;
@@ -126,46 +127,57 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     document.getElementById('hiddenFileInputVideo').click();
   }
 
+  openInputZoom() {
+    document.getElementById('hiddenFileInputZoom').click();
+  }
+
   openInputPhone() {
     document.getElementById('hiddenFileInputPhone').click();
   }
 
-  dropFile(files: File[], ext: string[]) {
+  dropFile(files: File[], ext: string[], multiple: boolean) {
+    const res = [];
     for (const f of files) {
       if (FileUtils.hasExtension(f.name, ext)) {
-        this.fileChange(f);
-        return;
+        if (multiple) {
+          res.push(f);
+        } else {
+          this.fileChange(f);
+          return;
+        }
       }
     }
-    this.fileChange(null);
+    this.filesChange(res);
   }
 
   filesChange(files: File[]) {
-    if (files.length > 0) {
-      this.fileChange(files[0]);
-    } else {
-      this.fileChange(null);
+    let f = files;
+    if (f?.length > 10) {
+      f = f.slice(0, 10);
     }
+    this.files = f;
+    this.selectedFileName = this.getFileNames(this.files);
   }
 
   fileChange(file: File): void {
-    this.selectedFile = null;
-    this.selectedFileName = null;
     this.paramsProviderService.lastSelectedFile = file;
+    let f: File[] = [];
     if (file) {
-      this.selectedFile = file;
-      this.selectedFileName = this.selectedFile.name;
+      f = [file];
     }
-    this.showAudioFile(file);
+    this.filesChange(f);
+  }
+
+  getFileNames(files: File[]): string {
+    return Array.from(files).map(f => f.name).join(', ');
   }
 
   upload() {
-    // console.log('sending this to server', this.selectedFile);
     this.sending = true;
 
-    let fo = of(this.selectedFile);
+    let fo = of(this.files[0]);
     if (this.inputIndex === VideoType) {
-      fo = this.mp4Extractor.extract(this.selectedFile);
+      fo = this.mp4Extractor.extract(this.files[0]);
     }
     fo.subscribe({
       next: (file) => {
@@ -247,31 +259,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   isValid() {
-    return this.selectedFile && this._email && !this.recorder.recording;
-  }
-
-  canPlayAudio(): boolean {
-    return !this.audioPlayer.isPlaying() && this.selectedFile != null;
-  }
-
-  canStopAudio(): boolean {
-    return this.audioPlayer.isPlaying();
-  }
-
-  showAudioFile(file: File) {
-    if (file != null) {
-      this.audioPlayer.loadFile(file);
-    } else {
-      this.audioPlayer.clear();
-    }
-  }
-
-  playAudio() {
-    this.audioPlayer.play();
-  }
-
-  stopAudio() {
-    this.audioPlayer.pause();
+    return this.files?.length && this._email && !this.recorder.recording;
   }
 
   startRecord() {
@@ -282,6 +270,10 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
 
   stopRecord() {
     this.recorder.stop();
+  }
+
+  canStartRecord() {
+    return true;
   }
 
   showVersion() {

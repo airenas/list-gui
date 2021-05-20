@@ -1,0 +1,16 @@
+<div>
+    <div class="audio-control">
+        <div [id]="divId" class="audio-wave"></div>
+        <button class="audio-button" id="playAudioButton" color="primary" mat-button (click)="playAudio()"
+            *ngIf="canPlayAudio()">
+            <i class="material-icons">play_arrow</i>
+        </button>
+        <button class="audio-button" id="stopAudioButton" color="warn" mat-button (click)="stopAudio()"
+            *ngIf="canStopAudio()">
+            <i class="material-icons">stop</i>
+        </button>
+    </div>
+    <div id="fileSizeDiv" *ngIf="file" class="file-size-div">Dydis: {{file.size | filesize}}
+        <span *ngIf="showFileName" class="file-name-span">{{file.name}}</span>
+    </div>
+</div>
