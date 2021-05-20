@@ -133,7 +133,7 @@
         </mat-tab-group>
         <div [hidden]="recorder.recording || !files?.length">
           <div *ngFor="let f of files">
-            <app-audio [file]="f" [showFileName]="true"></app-audio>
+            <app-audio [file]="f" [showFileName]="inputIndex == ZoomType"></app-audio>
           </div>
         </div>
         <div [hidden]="!recorder.recording">

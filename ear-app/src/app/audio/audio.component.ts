@@ -16,7 +16,6 @@ export class AudioComponent implements OnInit, OnDestroy, AfterViewInit {
     this.divId = 'audio-' + this.id();
   }
   ngAfterViewInit(): void {
-    console.log('after init audio ' + this.divId);
     setTimeout(() => {
       this.audioPlayer = this.audioPlayerFactory.create('#' + this.divId, (ev) => this.cdr.detectChanges());
       this.loadFile(this.file);
@@ -29,12 +28,10 @@ export class AudioComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
-    console.log('Destroy audio ' + this.divId);
     this.audioPlayer.destroy();
   }
 
   ngOnInit(): void {
-    console.log('init audio ' + this.divId);
   }
 
   canPlayAudio(): boolean {

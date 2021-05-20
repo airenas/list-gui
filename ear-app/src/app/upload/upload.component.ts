@@ -23,11 +23,6 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
-const AudioType = 0;
-const PhoneAudioType = 1;
-const VideoType = 2;
-const ZoomType = 3;
-
 @Component({
   selector: 'app-upload',
   templateUrl: './upload.component.html',
@@ -56,6 +51,11 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   private _speakerCount: string;
   speakerCountValues: SpeakerCount[];
   _uploadParamSkipNumJoin = false;
+
+  AudioType = 0;
+  PhoneAudioType = 1;
+  VideoType = 2;
+  ZoomType = 3;
 
   ngOnInit() {
     console.log('Init upload');
@@ -176,7 +176,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     this.sending = true;
 
     let fo = of(this.files[0]);
-    if (this.inputIndex === VideoType) {
+    if (this.inputIndex === this.VideoType) {
       fo = this.mp4Extractor.extract(this.files[0]);
     }
     fo.subscribe({
@@ -212,7 +212,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   turnAudioInput() {
-    this.inputIndex = AudioType;
+    this.inputIndex = this.AudioType;
   }
 
   get inputIndex(): number {
