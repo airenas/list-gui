@@ -232,11 +232,11 @@ describe('UploadComponent', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivAudio')))).toBeTruthy();
-      component.dropFile([new FileHelper().createFakeFile()], ['.wav']);
+      component.dropFile([new FileHelper().createFakeFile()], ['.wav'], false);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
         expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivAudio')))).toBeFalsy();
-        expect(component.selectedFile).toBeDefined();
+        expect(component.files?.length).toEqual(1);
       });
     });
   }));
@@ -255,11 +255,11 @@ describe('UploadComponent', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivAudio')))).toBeTruthy();
-      component.dropFile([new FileHelper().createFakeFile()], ['.txt']);
+      component.dropFile([new FileHelper().createFakeFile()], ['.txt'], false);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
         expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivAudio')))).toBeTruthy();
-        expect(component.selectedFile).toBeNull();
+        expect(component.files?.length).toEqual(0);
       });
     });
   }));
@@ -269,11 +269,11 @@ describe('UploadComponent', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivPhone')))).toBeTruthy();
-      component.dropFile([new FileHelper().createFakeFile()], ['.wav']);
+      component.dropFile([new FileHelper().createFakeFile()], ['.wav'], false);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
         expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivPhone')))).toBeFalsy();
-        expect(component.selectedFile).toBeDefined();
+        expect(component.files?.length).toEqual(1);
       });
     });
   }));
@@ -283,11 +283,11 @@ describe('UploadComponent', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivVideo')))).toBeTruthy();
-      component.dropFile([new FileHelper().createFakeFile()], ['.wav']);
+      component.dropFile([new FileHelper().createFakeFile()], ['.wav'], false);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
         expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivVideo')))).toBeFalsy();
-        expect(component.selectedFile).toBeDefined();
+        expect(component.files?.length).toEqual(1);
       });
     });
   }));
@@ -429,22 +429,6 @@ describe('UploadComponent Own Mock', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(component.speakerCount).toBe('-');
-    });
-  }));
-
-  it('should stop playing on destroy', async(() => {
-    const params = new TestParamsProviderService();
-    TestUtil.configure(TestUtil.providers(params));
-    fixture = TestBed.createComponent(UploadComponent);
-    component = fixture.debugElement.componentInstance;
-    fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      component.playAudio();
-      expect(component.audioPlayer.isPlaying()).toEqual(true);
-      fixture.destroy();
-      fixture.whenStable().then(() => {
-        expect(component.audioPlayer.isPlaying()).toEqual(false);
-      });
     });
   }));
 
