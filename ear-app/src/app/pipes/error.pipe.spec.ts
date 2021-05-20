@@ -26,6 +26,12 @@ describe('ErrorPipe', () => {
     expect(transformed).toEqual('Blogas formatas');
   });
 
+  it('transforms Len differs error', () => {
+    const pipe = new ErrorPipe(false);
+    const transformed = pipe.transform({id: 'id', status: Status.Uploaded, errorCode: ErrorCode.LenDiffer, error: 'olia'});
+    expect(transformed).toEqual('Pateiktų audio failų trukmė skiriasi');
+  });
+
   it('returns the same', () => {
     const pipe = new ErrorPipe(true);
     const transformed = pipe.transform({id: 'id', status: Status.Uploaded, errorCode: ErrorCode.ServiceError, error: 'olia'});
