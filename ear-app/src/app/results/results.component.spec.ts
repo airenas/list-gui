@@ -166,7 +166,7 @@ describe('ResultsComponent', () => {
   }));
 
   it('should have audio control', async(() => {
-    const r = { status: Status.Completed, id: 'x', error: '', recognizedText: '', progress: 0 };
+    const r = { status: Status.Completed, id: 'x', error: '', recognizedText: '', progress: 0, audioReady: true };
     component.onResult(r);
     fixture.detectChanges();
     fixture.whenStable().then(() => {
@@ -176,7 +176,7 @@ describe('ResultsComponent', () => {
   }));
 
   it('should have audio download button', async(() => {
-    const r = { status: Status.Completed, id: 'oliaID', error: '', recognizedText: '', progress: 0 };
+    const r = { status: Status.Completed, id: 'oliaID', error: '', recognizedText: '', progress: 0, audioReady: true };
     component.onResult(r);
     fixture.detectChanges();
     fixture.whenStable().then(() => {
@@ -186,7 +186,7 @@ describe('ResultsComponent', () => {
   }));
 
   it('should hide play audio button', async(() => {
-    const r = { status: Status.Completed, id: 'oliaID', error: '', recognizedText: '', progress: 0 };
+    const r = { status: Status.Completed, id: 'oliaID', error: '', recognizedText: '', progress: 0, audioReady: true };
     component.onResult(r);
     fixture.detectChanges();
     fixture.debugElement.query(By.css('#playAudioButton')).nativeElement.click();
@@ -207,7 +207,12 @@ describe('ResultsComponent', () => {
   }));
 
   it('should show download buttons', async(() => {
-    const r = { status: Status.Completed, id: 'x', error: '', recognizedText: '', progress: 0 };
+    const r = {
+      status: Status.Completed, id: 'x', error: '', recognizedText: '', progress: 0,
+      avResults: ['lat.restored.txt', 'webvtt.txt', 'result.txt', 'resultFinal.txt', 'lat.txt',
+        'lat.gz', 'lat.nb10.txt', 'lat.restored.gz'
+      ]
+    };
     component.onResult(r);
     fixture.detectChanges();
     component.menuTrigger.openMenu();
@@ -221,7 +226,10 @@ describe('ResultsComponent', () => {
   }));
 
   it('should call download', async(() => {
-    const r = { status: Status.Completed, id: 'iddddd', error: '', recognizedText: '', progress: 0 };
+    const r = {
+      status: Status.Completed, id: 'iddddd', error: '', recognizedText: '', progress: 0,
+      avResults: ['result.txt']
+    };
     component.onResult(r);
     fixture.detectChanges();
     component.menuTrigger.openMenu();
@@ -237,7 +245,10 @@ describe('ResultsComponent', () => {
   }));
 
   it('should call download - WebVTT', async(() => {
-    const r = { status: Status.Completed, id: 'iddddd', error: '', recognizedText: '', progress: 0 };
+    const r = {
+      status: Status.Completed, id: 'iddddd', error: '', recognizedText: '', progress: 0,
+      avResults: ['lat.restored.txt', 'webvtt.txt']
+    };
     component.onResult(r);
     fixture.detectChanges();
     component.menuTrigger.openMenu();
@@ -253,7 +264,10 @@ describe('ResultsComponent', () => {
   }));
 
   it('should call download - LatRestored', async(() => {
-    const r = { status: Status.Completed, id: 'iddddd', error: '', recognizedText: '', progress: 0 };
+    const r = {
+      status: Status.Completed, id: 'iddddd', error: '', recognizedText: '', progress: 0,
+      avResults: ['lat.restored.txt', 'webvtt.txt']
+    };
     component.onResult(r);
     fixture.detectChanges();
     component.menuTrigger.openMenu();
@@ -269,7 +283,10 @@ describe('ResultsComponent', () => {
   }));
 
   it('should have hidden file buttons when in progress', async(() => {
-    const r = { status: Status.Transcription, id: 'id', error: '', recognizedText: '', progress: 0 };
+    const r = {
+      status: Status.Transcription, id: 'id', error: '', recognizedText: '', progress: 0,
+      avResults: ['lat.restored.txt', 'webvtt.txt']
+    };
     component.onResult(r);
     fixture.detectChanges();
     fixture.whenStable().then(() => {
@@ -304,8 +321,11 @@ describe('ResultsComponent', () => {
     });
   }));
 
-  it('should display editor button when completed', async(() => {
-    const r = { status: Status.Completed, id: 'id', error: '', recognizedText: '', progress: 0 };
+  it('should display editor button when lat.restored.txt provided', async(() => {
+    const r = {
+      status: Status.Completed, id: 'id', error: '', recognizedText: '', progress: 0,
+      avResults: ['lat.restored.txt']
+    };
     component.onResult(r);
     fixture.detectChanges();
     fixture.whenStable().then(() => {
@@ -349,7 +369,10 @@ describe('ResultsComponent', () => {
   }));
 
   it('should click editor button', async(() => {
-    const r = { status: Status.Completed, id: 'iddddd', error: '', recognizedText: '', progress: 0 };
+    const r = {
+      status: Status.Completed, id: 'iddddd', error: '', recognizedText: '', progress: 0,
+      avResults: ['lat.restored.txt']
+    };
     component.onResult(r);
     fixture.detectChanges();
     const editorSpy = spyOn(component, 'openEditor').and.callFake(function () { });
