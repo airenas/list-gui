@@ -72,14 +72,14 @@
       <div class="file-control">
         <button mat-raised-button color="primary" id="dwnMenu" [matMenuTriggerFor]="menu"
           #menuTrigger='matMenuTrigger'>Atsisiųsti</button>
-        <mat-menu #menu="matMenu">
+        <mat-menu #menu="matMenu" yPosition="above">
           <div *ngFor="let file of fileKeeper.dwnFiles">
-            <button mat-menu-item class="file-button" id="{{file.id}}"
-              (click)="fileKeeper.download(file.url)">{{ file.title }}</button>
+            <button mat-menu-item class="file-button" id="{{file.id}}" (click)="fileKeeper.download(file.url)">{{
+              file.title }}</button>
           </div>
         </mat-menu>
-        <button mat-raised-button color="primary" id="openEditorButton" (click)="openEditor()" class="editor-button">Atidaryti
-          redaktoriuje</button>
+        <button mat-raised-button color="primary" id="openEditorButton" (click)="openEditor()" class="editor-button"
+          *ngIf="fileKeeper.availableEditor">Atidaryti redaktoriuje</button>
       </div>
     </mat-card-content>
   </mat-card>

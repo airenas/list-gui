@@ -20,6 +20,9 @@ export class ErrorPipe implements PipeTransform {
         return 'Serviso klaida';
       }
     }
+    if (value.errorCode === ErrorCode.LenDiffer) {
+      return 'Pateiktų audio failų trukmė skiriasi';
+    }
     return value.error;
   }
 }

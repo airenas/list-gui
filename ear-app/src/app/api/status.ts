@@ -6,5 +6,6 @@ export enum Status {
     Transcription = 'Transcription',
     Rescore = 'Rescore',
     ResultMake = 'ResultMake',
+    JoinResults = 'JoinResults',
     NOT_FOUND = 'NOT_FOUND',
 }

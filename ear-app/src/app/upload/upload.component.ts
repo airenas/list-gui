@@ -12,7 +12,6 @@ import { AudioPlayer, AudioPlayerFactory } from '../utils/audio.player';
 import { Microphone, MicrophoneFactory } from '../utils/microphone';
 import { environment } from 'src/environments/environment';
 import 'rxjs/add/observable/interval';
-import { of } from 'rxjs/internal/observable/of';
 import { FileUtils } from '../utils/file';
 import { Mp4ExtratorService } from '../service/mp4-extrator.service';
 
@@ -22,10 +21,6 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
 }
-
-const AudioType = 0;
-const PhoneAudioType = 1;
-const VideoType = 2;
 
 @Component({
   selector: 'app-upload',
@@ -41,7 +36,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     super(transcriptionService, snackBar);
   }
 
-  selectedFile: File; // hold our file
+  files: File[];
   selectedFileName: string; // hold our file name
   private _email: string;
   recorder: Microphone;
@@ -55,6 +50,11 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   private _speakerCount: string;
   speakerCountValues: SpeakerCount[];
   _uploadParamSkipNumJoin = false;
+
+  AudioType = 0;
+  PhoneAudioType = 1;
+  VideoType = 2;
+  ZoomType = 3;
 
   ngOnInit() {
     console.log('Init upload');
@@ -126,71 +126,86 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     document.getElementById('hiddenFileInputVideo').click();
   }
 
+  openInputZoom() {
+    document.getElementById('hiddenFileInputZoom').click();
+  }
+
   openInputPhone() {
     document.getElementById('hiddenFileInputPhone').click();
   }
 
-  dropFile(files: File[], ext: string[]) {
+  dropFile(files: File[], ext: string[], multiple: boolean) {
+    const res = [];
     for (const f of files) {
       if (FileUtils.hasExtension(f.name, ext)) {
-        this.fileChange(f);
-        return;
+        if (multiple) {
+          res.push(f);
+        } else {
+          this.fileChange(f);
+          return;
+        }
       }
     }
-    this.fileChange(null);
+    this.filesChange(res);
   }
 
   filesChange(files: File[]) {
-    if (files.length > 0) {
-      this.fileChange(files[0]);
-    } else {
-      this.fileChange(null);
+    let f = files;
+    if (f?.length > 10) {
+      f = f.slice(0, 10);
     }
+    this.files = f;
+    this.selectedFileName = this.getFileNames(this.files);
   }
 
   fileChange(file: File): void {
-    this.selectedFile = null;
-    this.selectedFileName = null;
     this.paramsProviderService.lastSelectedFile = file;
+    let f: File[] = [];
     if (file) {
-      this.selectedFile = file;
-      this.selectedFileName = this.selectedFile.name;
+      f = [file];
     }
-    this.showAudioFile(file);
+    this.filesChange(f);
+  }
+
+  getFileNames(files: File[]): string {
+    return Array.from(files).map(f => f.name).join(', ');
   }
 
   upload() {
-    // console.log('sending this to server', this.selectedFile);
     this.sending = true;
 
-    let fo = of(this.selectedFile);
-    if (this.inputIndex === VideoType) {
-      fo = this.mp4Extractor.extract(this.selectedFile);
+    if (this.inputIndex === this.VideoType) {
+      this.mp4Extractor.extract(this.files[0]).subscribe({
+        next: (file) => {
+          this.uploadFiles([file]);
+        },
+        error: (error) => {
+          this.sending = false;
+          this.showError('Nepavyko konvertuoti failą.', error);
+        }
+      });
+    } else {
+      this.uploadFiles(this.files);
     }
-    fo.subscribe({
-      next: (file) => {
-        this.transcriptionService.sendFile({
-          file: file, fileName: this.selectedFileName, email: this.email,
-          recognizer: this.recognizer(this.inputIndex),
-          speakerCount: (this.speakerCount === '-' ? '' : this.speakerCount),
-          skipNumJoin: this._uploadParamSkipNumJoin
-        })
-          .subscribe(
-            result => {
-              this.sending = false;
-              this.onResult(result);
-            },
-            error => {
-              this.sending = false;
-              this.showError('Nepavyko nusiųsti failo.', error);
-            }
-          );
-      },
-      error: (error) => {
-        this.sending = false;
-        this.showError('Nepavyko konvertuoti failą.', error);
-      }
-    });
+  }
+
+  uploadFiles(files: File[]) {
+    this.transcriptionService.sendFile({
+      files: files, email: this.email,
+      recognizer: this.recognizer(this.inputIndex),
+      speakerCount: (this.speakerCount === '-' ? '' : this.speakerCount),
+      skipNumJoin: this._uploadParamSkipNumJoin
+    })
+      .subscribe(
+        result => {
+          this.sending = false;
+          this.onResult(result);
+        },
+        error => {
+          this.sending = false;
+          this.showError('Nepavyko nusiųsti failo.', error);
+        }
+      );
   }
 
   onResult(result: SendFileResult) {
@@ -200,7 +215,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   turnAudioInput() {
-    this.inputIndex = AudioType;
+    this.inputIndex = this.AudioType;
   }
 
   get inputIndex(): number {
@@ -224,13 +239,13 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   recognizer(index: number): string {
-    if (index === 0) {
+    if (index === this.AudioType || index === this.ZoomType) {
       return 'audioDefault';
     }
-    if (index === 1) {
+    if (index === this.PhoneAudioType) {
       return 'audioPhone';
     }
-    if (index === 2) {
+    if (index === this.VideoType) {
       return 'audioDefault';
     }
     console.error('Unknown inputIndex', index);
@@ -247,31 +262,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   isValid() {
-    return this.selectedFile && this._email && !this.recorder.recording;
-  }
-
-  canPlayAudio(): boolean {
-    return !this.audioPlayer.isPlaying() && this.selectedFile != null;
-  }
-
-  canStopAudio(): boolean {
-    return this.audioPlayer.isPlaying();
-  }
-
-  showAudioFile(file: File) {
-    if (file != null) {
-      this.audioPlayer.loadFile(file);
-    } else {
-      this.audioPlayer.clear();
-    }
-  }
-
-  playAudio() {
-    this.audioPlayer.play();
-  }
-
-  stopAudio() {
-    this.audioPlayer.pause();
+    return this.files?.length && this._email && !this.recorder.recording;
   }
 
   startRecord() {
@@ -282,6 +273,10 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
 
   stopRecord() {
     this.recorder.stop();
+  }
+
+  canStartRecord() {
+    return true;
   }
 
   showVersion() {

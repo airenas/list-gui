@@ -28,6 +28,9 @@ export class StatusHumanPipe implements PipeTransform {
     if (value === Status.ResultMake) {
       return 'Ruošiamas rezultatas';
     }
+    if (value === Status.JoinResults) {
+      return 'Ruošiami/apjungiami rezultatai';
+    }
     if (value === Status.NOT_FOUND) {
       return 'Nežinomas ID';
     }

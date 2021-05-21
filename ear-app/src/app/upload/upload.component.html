@@ -15,8 +15,8 @@
               patys įrašyti</div>
             <div class="upload-input-width">
               <div class="upload-file-container-dnd file-input" appFileDnd
-                (fileDropped)="dropFile($event, ['.mp4', '.wav','.mp3','.m4a'])">
-                <div *ngIf="!recorder.recording && !selectedFile" class="dnd-div" id="dndDivAudio">
+                (fileDropped)="dropFile($event, ['.mp4', '.wav','.mp3','.m4a'], false)">
+                <div *ngIf="!recorder.recording && !files?.length" class="dnd-div" id="dndDivAudio">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
                 </div>
@@ -32,7 +32,7 @@
                   </button>
 
                   <button *ngIf="!recorder.recording" class="mic-button" id="startRecordButton" color="primary"
-                    mat-button [disabled]="canStopAudio()" (click)="startRecord()">
+                    mat-button [disabled]="!canStartRecord()" (click)="startRecord()">
                     <i class="material-icons">mic</i>
                   </button>
                   <button *ngIf="recorder.recording" class="mic-button" color="warn" id="stopRecordButton" mat-button
@@ -53,8 +53,8 @@
               telefoninis įrašas</div>
             <div class="upload-input-width">
               <div class="upload-file-container-dnd file-input" appFileDnd
-                (fileDropped)="dropFile($event, ['.mp4', '.wav','.mp3','.m4a'])">
-                <div *ngIf="!selectedFile" class="dnd-div" id="dndDivPhone">
+                (fileDropped)="dropFile($event, ['.mp4', '.wav','.mp3','.m4a'], false)">
+                <div *ngIf="!files?.length" class="dnd-div" id="dndDivPhone">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
                 </div>
@@ -84,8 +84,8 @@
               transkribuoti video failą naudodamiesi telefonu ar planšetiniu kompiuteriu,
               rinkitės <a id="aIrasas" href="javascript: void(0);" (click)="turnAudioInput()">Įrašas</a> siuntimo variantą</div>
             <div class="upload-input-width">
-              <div class="upload-file-container-dnd file-input" appFileDnd (fileDropped)="dropFile($event, ['.mp4'])">
-                <div *ngIf="!selectedFile" class="dnd-div" id="dndDivVideo">
+              <div class="upload-file-container-dnd file-input" appFileDnd (fileDropped)="dropFile($event, ['.mp4'], false)">
+                <div *ngIf="!files?.length" class="dnd-div" id="dndDivVideo">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
                 </div>
@@ -104,20 +104,36 @@
               </div>
             </div>
           </mat-tab>
+          <mat-tab [disabled]="sending">
+            <ng-template mat-tab-label>
+              <span class="stepper-title">Zoom</span>
+            </ng-template>
+            <div class="info-text">Šis pasirinkimas skirtas, kai turite <i>Zoom</i> susitikimo įrašą ir kai kiekvieno dalyvio garso takelis išsaugotas atskirame faile. Įkelkite visus susitikimo garso įrašo failus (daugiausiai leidžiama iki 10 failų)</div>
+            <div class="upload-input-width">
+              <div class="upload-file-container-dnd file-input" appFileDnd (fileDropped)="dropFile($event, ['.m4a'], true)">
+                <div *ngIf="!files?.length" class="dnd-div" id="dndDivZoom">
+                  <i class="material-icons dnd-icon">input</i>
+                  <span class="dnd-span">Įtempkite failus</span>
+                </div>
+                <div class="upload-file-container">
+                  <mat-form-field class="upload-file-control">
+                    <input id="hiddenFileInputZoom" hidden type="file" accept=".m4a"
+                      (change)="filesChange($event.target.files)" multiple>
+                    <input id="fileInputZoom" matInput placeholder="Failai" readonly="true"
+                      [(ngModel)]="selectedFileName" (click)="openInputZoom()"
+                      matTooltip="Pasirinkite arba užtempkite audio failus">
+                  </mat-form-field>
+                  <button class="upload-select-button" id="selectFileButton" mat-button (click)="openInputZoom()">
+                    <i class="material-icons">attachment</i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
         </mat-tab-group>
-        <div [hidden]="recorder.recording || selectedFile == null">
-          <div class="audio-control">
-            <div id="audioWaveDiv" class="audio-wave"></div>
-            <button class="audio-button" id="playAudioButton" color="primary" mat-button [disabled]="!canPlayAudio()"
-              (click)="playAudio()" *ngIf="canPlayAudio()">
-              <i class="material-icons">play_arrow</i>
-            </button>
-            <button class="audio-button" id="stopAudioButton" color="warn" mat-button [disabled]="!canStopAudio()"
-              (click)="stopAudio()" *ngIf="canStopAudio()">
-              <i class="material-icons">stop</i>
-            </button>
-          </div>
-          <div id="fileSizeDiv" *ngIf="selectedFile" class="file-size-div">Dydis: {{selectedFile.size | filesize}}
+        <div [hidden]="recorder.recording || !files?.length">
+          <div *ngFor="let f of files">
+            <app-audio [file]="f" [showFileName]="inputIndex == ZoomType"></app-audio>
           </div>
         </div>
         <div [hidden]="!recorder.recording">

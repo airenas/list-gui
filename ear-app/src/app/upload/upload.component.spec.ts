@@ -1,3 +1,4 @@
+import { AudioComponent } from './../audio/audio.component';
 import { Observable } from 'rxjs/Observable';
 import { TestAudioPlayerFactory } from './../utils/audio.player.specs';
 import { TranscriptionService } from './../service/transcription.service';
@@ -44,7 +45,7 @@ describe('UploadComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [UploadComponent],
+      declarations: [UploadComponent, AudioComponent],
       imports: [TestAppModule, RouterTestingModule.withRoutes([])],
       providers: [
         { provide: AudioPlayerFactory, useClass: TestAudioPlayerFactory },
@@ -111,51 +112,44 @@ describe('UploadComponent', () => {
     });
   }));
 
-  it('should be play controls', async(() => {
+  it('should add audio', async(() => {
     component.fileChange(new FileHelper().createFakeFile());
+    expect(component.selectedFileName).toEqual('file.wav');
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect(fixture.debugElement.query(By.css('#playAudioButton')).nativeElement.disabled).toBe(false);
-      expect(fixture.debugElement.query(By.css('#stopAudioButton'))).toBeNull();
-      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#audioWaveDiv')))).toBe(true);
-      expect(component.audioPlayer.isPlaying()).toBe(false);
+      expect(fixture.debugElement.query(By.css('app-audio'))).toBeTruthy();
     });
   }));
 
-  it('should be stop audio button', async(() => {
-    component.fileChange(new FileHelper().createFakeFile());
-    fixture.detectChanges();
-    fixture.debugElement.query(By.css('#playAudioButton')).nativeElement.click();
+  it('should add several audio', async(() => {
+    const fh = new FileHelper();
+    component.filesChange([fh.createFakeFile(), fh.createFakeFile()]);
+    expect(component.selectedFileName).toEqual('file.wav, file.wav');
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect(fixture.debugElement.query(By.css('#playAudioButton'))).toBeNull();
-      expect(fixture.debugElement.query(By.css('#stopAudioButton')).nativeElement.disabled).toBe(false);
-      expect(component.audioPlayer.isPlaying()).toBe(true);
+      expect(fixture.debugElement.queryAll(By.css('app-audio')).length).toEqual(2);
     });
   }));
 
-  it('should invoke stop audio button', async(() => {
-    component.fileChange(new FileHelper().createFakeFile());
-    fixture.detectChanges();
-    fixture.debugElement.query(By.css('#playAudioButton')).nativeElement.click();
+  it('should limit files', async(() => {
+    const files: File[] = [];
+    const fh = new FileHelper();
+    for (let i = 0; i <= 15; i++) {
+      files.push(fh.createFakeFile());
+    }
+    component.filesChange(files);
+    expect(component.files.length).toEqual(10);
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect(component.audioPlayer.isPlaying()).toBe(true);
-      fixture.debugElement.query(By.css('#stopAudioButton')).nativeElement.click();
-      fixture.detectChanges();
-      fixture.whenStable().then(() => {
-        expect(component.audioPlayer.isPlaying()).toBe(false);
-      });
+      expect(fixture.debugElement.queryAll(By.css('app-audio')).length).toEqual(10);
     });
   }));
 
-  it('should be no play controls', async(() => {
+  it('should be no audio', async(() => {
     component.fileChange(null);
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect(fixture.debugElement.query(By.css('#playAudioButton'))).toBeNull();
-      expect(fixture.debugElement.query(By.css('#stopAudioButton'))).toBeNull();
-      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#audioWaveDiv')))).toBe(false);
+      expect(fixture.debugElement.query(By.css('app-audio'))).toBeNull();
     });
   }));
 
@@ -215,7 +209,15 @@ describe('UploadComponent', () => {
     component.inputIndexInt = 2;
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#fileInput')))).toBeTruthy();
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#fileInputVideo')))).toEqual(true);
+    });
+  }));
+
+  it('should show Zoom tab', async(() => {
+    component.inputIndexInt = component.ZoomType;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#fileInputZoom')))).toBeTruthy();
     });
   }));
 
@@ -232,11 +234,11 @@ describe('UploadComponent', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivAudio')))).toBeTruthy();
-      component.dropFile([new FileHelper().createFakeFile()], ['.wav']);
+      component.dropFile([new FileHelper().createFakeFile()], ['.wav'], false);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
         expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivAudio')))).toBeFalsy();
-        expect(component.selectedFile).toBeDefined();
+        expect(component.files?.length).toEqual(1);
       });
     });
   }));
@@ -255,11 +257,11 @@ describe('UploadComponent', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivAudio')))).toBeTruthy();
-      component.dropFile([new FileHelper().createFakeFile()], ['.txt']);
+      component.dropFile([new FileHelper().createFakeFile()], ['.txt'], false);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
         expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivAudio')))).toBeTruthy();
-        expect(component.selectedFile).toBeNull();
+        expect(component.files?.length).toEqual(0);
       });
     });
   }));
@@ -269,11 +271,11 @@ describe('UploadComponent', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivPhone')))).toBeTruthy();
-      component.dropFile([new FileHelper().createFakeFile()], ['.wav']);
+      component.dropFile([new FileHelper().createFakeFile()], ['.wav'], false);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
         expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivPhone')))).toBeFalsy();
-        expect(component.selectedFile).toBeDefined();
+        expect(component.files?.length).toEqual(1);
       });
     });
   }));
@@ -283,11 +285,38 @@ describe('UploadComponent', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivVideo')))).toBeTruthy();
-      component.dropFile([new FileHelper().createFakeFile()], ['.wav']);
+      component.dropFile([new FileHelper().createFakeFile()], ['.wav'], false);
       fixture.detectChanges();
       fixture.whenStable().then(() => {
         expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivVideo')))).toBeFalsy();
-        expect(component.selectedFile).toBeDefined();
+        expect(component.files?.length).toEqual(1);
+      });
+    });
+  }));
+
+  it('should show drop Zoom', async(() => {
+    component.inputIndexInt = 3;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivZoom')))).toBeTruthy();
+      component.dropFile([new FileHelper().createFakeFile()], ['.wav'], false);
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(TestHelper.Visible(fixture.debugElement.query(By.css('#dndDivZoom')))).toBeFalsy();
+        expect(component.files?.length).toEqual(1);
+      });
+    });
+  }));
+
+  it('should drop several Zoom', async(() => {
+    component.inputIndexInt = 3;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      const f = new FileHelper().createFakeFile();
+      component.dropFile([f, f, f], ['.wav'], true);
+      fixture.detectChanges();
+      fixture.whenStable().then(() => {
+        expect(component.files?.length).toEqual(3);
       });
     });
   }));
@@ -306,21 +335,12 @@ describe('UploadComponent', () => {
     expect(component.recognizer(0)).toBe('audioDefault');
     expect(component.recognizer(1)).toBe('audioPhone');
     expect(component.recognizer(2)).toBe('audioDefault');
+    expect(component.recognizer(component.ZoomType)).toBe('audioDefault');
   }));
 
   it('should show no spinner', async(() => {
     fixture.whenStable().then(() => {
       expect(fixture.debugElement.query(By.css('#uploadSpinner'))).toBeNull();
-    });
-  }));
-
-  it('should disable record button on Playing audio', async(() => {
-    component.fileChange(new FileHelper().createFakeFile());
-    fixture.detectChanges();
-    fixture.debugElement.query(By.css('#playAudioButton')).nativeElement.click();
-    fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect(fixture.debugElement.query(By.css('#startRecordButton')).nativeElement.disabled).toBe(true);
     });
   }));
 
@@ -429,22 +449,6 @@ describe('UploadComponent Own Mock', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(component.speakerCount).toBe('-');
-    });
-  }));
-
-  it('should stop playing on destroy', async(() => {
-    const params = new TestParamsProviderService();
-    TestUtil.configure(TestUtil.providers(params));
-    fixture = TestBed.createComponent(UploadComponent);
-    component = fixture.debugElement.componentInstance;
-    fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      component.playAudio();
-      expect(component.audioPlayer.isPlaying()).toEqual(true);
-      fixture.destroy();
-      fixture.whenStable().then(() => {
-        expect(component.audioPlayer.isPlaying()).toEqual(false);
-      });
     });
   }));
 
