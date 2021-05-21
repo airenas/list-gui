@@ -165,6 +165,16 @@ describe('ResultsComponent', () => {
     });
   }));
 
+  it('should have no audio control', async(() => {
+    const r = { status: Status.Completed, id: 'x', error: '', recognizedText: '', progress: 0, audioReady: false };
+    component.onResult(r);
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#audioWaveDiv')))).toBe(false);
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#playAudioButton')))).toBe(false);
+    });
+  }));
+
   it('should have audio control', async(() => {
     const r = { status: Status.Completed, id: 'x', error: '', recognizedText: '', progress: 0, audioReady: true };
     component.onResult(r);
@@ -210,8 +220,7 @@ describe('ResultsComponent', () => {
     const r = {
       status: Status.Completed, id: 'x', error: '', recognizedText: '', progress: 0,
       avResults: ['lat.restored.txt', 'webvtt.txt', 'result.txt', 'resultFinal.txt', 'lat.txt',
-        'lat.gz', 'lat.nb10.txt', 'lat.restored.gz'
-      ]
+        'lat.gz', 'lat.nb10.txt', 'lat.restored.gz']
     };
     component.onResult(r);
     fixture.detectChanges();
@@ -221,6 +230,23 @@ describe('ResultsComponent', () => {
       const dfs = ['dfResult', 'dfResultFinal', 'dfLat', 'dfLatGz', 'dfN10', 'dfLatRescore', 'dfLatRescoreGz', 'dfWebVTT'];
       dfs.forEach(element => {
         expect(TestHelper.Visible(fixture.debugElement.query(By.css('#' + element)))).toBe(true);
+      });
+    });
+  }));
+
+  it('should filter download buttons', async(() => {
+    const r = {
+      status: Status.Completed, id: 'x', error: '', recognizedText: '', progress: 0,
+      avResults: []
+    };
+    component.onResult(r);
+    fixture.detectChanges();
+    component.menuTrigger.openMenu();
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      const dfs = ['dfResult', 'dfResultFinal', 'dfLat', 'dfLatGz', 'dfN10', 'dfLatRescore', 'dfLatRescoreGz', 'dfWebVTT'];
+      dfs.forEach(element => {
+        expect(TestHelper.Visible(fixture.debugElement.query(By.css('#' + element)))).toBe(false);
       });
     });
   }));
@@ -285,7 +311,8 @@ describe('ResultsComponent', () => {
   it('should have hidden file buttons when in progress', async(() => {
     const r = {
       status: Status.Transcription, id: 'id', error: '', recognizedText: '', progress: 0,
-      avResults: ['lat.restored.txt', 'webvtt.txt']
+      avResults: ['lat.restored.txt', 'webvtt.txt', 'result.txt', 'resultFinal.txt', 'lat.txt',
+        'lat.gz', 'lat.nb10.txt', 'lat.restored.gz']
     };
     component.onResult(r);
     fixture.detectChanges();
@@ -330,6 +357,18 @@ describe('ResultsComponent', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(TestHelper.Visible(fixture.debugElement.query(By.css('#openEditorButton')))).toBe(true);
+    });
+  }));
+
+  it('should be no editor button when no lat.restored.txt provided', async(() => {
+    const r = {
+      status: Status.Completed, id: 'id', error: '', recognizedText: '', progress: 0,
+      avResults: ['webvtt.txt']
+    };
+    component.onResult(r);
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#openEditorButton')))).toBe(false);
     });
   }));
 
