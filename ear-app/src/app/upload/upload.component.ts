@@ -12,7 +12,6 @@ import { AudioPlayer, AudioPlayerFactory } from '../utils/audio.player';
 import { Microphone, MicrophoneFactory } from '../utils/microphone';
 import { environment } from 'src/environments/environment';
 import 'rxjs/add/observable/interval';
-import { of } from 'rxjs/internal/observable/of';
 import { FileUtils } from '../utils/file';
 import { Mp4ExtratorService } from '../service/mp4-extrator.service';
 
