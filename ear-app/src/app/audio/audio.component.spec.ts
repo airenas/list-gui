@@ -24,7 +24,6 @@ describe('AudioComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AudioComponent);
     component = fixture.componentInstance;
-    component.divId = 'audioWaveDiv'; // change for testing
     component.init();
     component.loadFile(new FileHelper().createFakeFile());
     fixture.detectChanges();
@@ -38,7 +37,7 @@ describe('AudioComponent', () => {
     fixture.whenStable().then(() => {
       expect(fixture.debugElement.query(By.css('#playAudioButton')).nativeElement.disabled).toBe(false);
       expect(fixture.debugElement.query(By.css('#stopAudioButton'))).toBeNull();
-      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#audioWaveDiv')))).toBe(true);
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#' + component.divId)))).toBe(true);
       expect(component.audioPlayer.isPlaying()).toBe(false);
     });
   }));
@@ -64,5 +63,9 @@ describe('AudioComponent', () => {
         expect(component.audioPlayer.isPlaying()).toBe(false);
       });
     });
+  }));
+
+  it('generates random divId', async(() => {
+    expect(component.divId).not.toEqual(component.generateId());
   }));
 });

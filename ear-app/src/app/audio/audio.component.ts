@@ -13,7 +13,7 @@ export class AudioComponent implements OnInit, OnDestroy, AfterViewInit {
   divId: string;
 
   constructor(private cdr: ChangeDetectorRef, private audioPlayerFactory: AudioPlayerFactory) {
-    this.divId = 'audio-' + this.id();
+    this.divId = this.generateId();
   }
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -30,9 +30,9 @@ export class AudioComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadFile(this.file);
   }
 
-  id(): string {
+  generateId(): string {
     // tslint:disable-next-line: no-bitwise
-    return (((1 + Math.random()) * 0x10000) | 0).toString(16);
+    return 'audio-' + (((1 + Math.random()) * 0x1000000000) | 0).toString(16);
   }
 
   ngOnDestroy() {
