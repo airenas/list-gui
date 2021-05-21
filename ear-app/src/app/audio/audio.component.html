@@ -11,6 +11,6 @@
         </button>
     </div>
     <div id="fileSizeDiv" *ngIf="file" class="file-size-div">Dydis: {{file.size | filesize}}
-        <span *ngIf="showFileName" class="file-name-span">{{file.name}}</span>
+        <span id="fileNameSpan" *ngIf="showFileName" class="file-name-span">{{file.name}}</span>
     </div>
 </div>

@@ -12,13 +12,13 @@ describe('AudioComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AudioComponent ],
+      declarations: [AudioComponent],
       imports: [TestAppModule],
       providers: [
         { provide: AudioPlayerFactory, useClass: TestAudioPlayerFactory },
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -67,5 +67,16 @@ describe('AudioComponent', () => {
 
   it('generates random divId', async(() => {
     expect(component.divId).not.toEqual(component.generateId());
+  }));
+
+  it('shoud have no name', async(() => {
+    expect(TestHelper.Visible(fixture.debugElement.query(By.css('#fileNameSpan')))).toBe(false);
+  }));
+  it('shoud show name', async(() => {
+    component.showFileName = true;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(TestHelper.Visible(fixture.debugElement.query(By.css('#fileNameSpan')))).toBe(true);
+    });
   }));
 });
