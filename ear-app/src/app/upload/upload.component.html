@@ -108,7 +108,7 @@
             <ng-template mat-tab-label>
               <span class="stepper-title">Zoom</span>
             </ng-template>
-            <div class="info-text">Šis pasirinkimas skirtas, kai turite <i>Zoom</i> susitikimo įrašą ir kai kiekvieno dalyvio garso takelis išsaugotas atskirame faile. Įkelkite visus susitikimo garso įrašo failus (daugiausiai leidžiama iki 10 failų)</div>
+            <div class="info-text">Šis pasirinkimas skirtas, kai turite <i>Zoom</i> susitikimo įrašą ir kai kiekvieno dalyvio garso takelis išsaugotas atskirame faile. Įkelkite visus susitikimo garso įrašo failus (max 10 failų)</div>
             <div class="upload-input-width">
               <div class="upload-file-container-dnd file-input" appFileDnd (fileDropped)="dropFile($event, ['.m4a'], true)">
                 <div *ngIf="!files?.length" class="dnd-div" id="dndDivZoom">
