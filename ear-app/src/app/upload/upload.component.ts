@@ -92,7 +92,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   initSpeakerCount() {
-    this.speakerCountValues = [{ id: '-', name: '--', tooltip: 'Automatiškai nustatomas diktorių skaičius' },
+    this.speakerCountValues = [{ id: '-', name: 'Nustatyti automatiškai', tooltip: 'Automatiškai nustatomas diktorių skaičius' },
     { id: '1', name: '1', tooltip: 'Vieno diktoriaus garso įrašas' },
     { id: '2', name: '2', tooltip: 'Garso įraše kalba du diktoriai' }];
     this._speakerCount = this.paramsProviderService.getSpeakerCount();
@@ -192,7 +192,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   uploadFiles(files: File[]) {
     this.transcriptionService.sendFile({
       files: files, email: this.email,
-      recognizer: this.recognizer(this.inputIndex),
+      recognizer: this.recognizer(this.inputIndexInt),
       speakerCount: (this.speakerCount === '-' ? '' : this.speakerCount),
       skipNumJoin: this._uploadParamSkipNumJoin
     })
@@ -218,15 +218,21 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     this.inputIndex = this.AudioType;
   }
 
-  get inputIndex(): number {
+  get inputIndex(): number | string {
     return this.inputIndexInt;
   }
 
-  set inputIndex(value: number) {
+  set inputIndex(value: number | string) {
+
+    console.log('Input', value, typeof(value));
     this.cancelRecording();
+    if (typeof(value) === 'string') {
+      value = parseInt(value, 10) || 0;
+    }
     this.inputIndexInt = value;
     this.paramsProviderService.setInputMethod(value);
     this.fileChange(null);
+    console.log('Input int', this.inputIndexInt);
   }
 
   get email(): string {

@@ -1,4 +1,207 @@
-<mat-card class="upload-form">
+<section class="u-align-center u-clearfix u-section-1" id="sec-0dce">
+  <div class="u-clearfix u-sheet u-sheet-1">
+    <section class="u-align-center u-clearfix u-section-1 u-section-2" id="sec-0dce">
+      <div class="u-clearfix u-sheet u-sheet-1 u-sheet-2">
+        <div class="u-form u-form-1 u-form-2">
+          <div class="u-form-group u-form-group-1 u-form-name">
+            <input type="text" placeholder="Įveskite naudotojo kodą" id="name-558c" name="vartotojo kodas"
+              class="u-border-1 u-border-grey-30 u-input u-input-rectangle" required="">
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <style data-mode="XL" data-visited="true">
+    .u-section-1 .u-sheet-1 {
+      min-height: 16px;
+    }
+
+    .u-section-1 .u-form-1 {
+      height: 57px;
+      width: 570px;
+      margin: 15px auto 60px;
+    }
+
+    .u-section-1 .u-sheet-1 {
+      min-height: 16px;
+    }
+
+    .u-block-f724-3 {
+      height: 47px;
+      width: 590px;
+      margin: -60px auto -102px;
+    }
+  </style>
+  <style data-mode="LG"></style>
+  <style data-mode="MD"></style>
+  <style data-mode="SM">
+    @media (max-width: 767px) {
+      .u-section-1 .u-form-1 {
+        width: 540px;
+      }
+
+      .u-block-f724-3 {
+        width: 540px;
+      }
+    }
+  </style>
+  <style data-mode="XS">
+    @media (max-width: 575px) {
+      .u-section-1 .u-form-1 {
+        width: 340px;
+      }
+
+      .u-block-f724-3 {
+        width: 340px;
+      }
+    }
+  </style>
+</section>
+
+<section class="u-align-center u-clearfix u-section-3" id="carousel_69cd">
+  <div class="u-clearfix u-sheet u-sheet-1">
+    <div class="u-clearfix u-custom-html u-expanded-width u-custom-html-1">
+      <label for="uzduotis">Užduotis:</label>
+      <select name="uzduotis" id="uzduotis" [(ngModel)]="inputIndex"
+        class="u-border-none u-btn-1 u-btn-round u-button-style u-hover-palette-1-light-1 u-palette-3-light-1 u-radius-30">
+        <option value="0">Garso failo transkripcija</option>
+        <option value="2">Vaizdo failo transkripcija</option>
+        <option value="3">Zoom rinkinio transkripcija </option>
+      </select>
+    </div>
+  </div>
+</section>
+<section class="u-clearfix u-section-4" id="sec-6bad">
+  <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+    <div
+      class="u-border-10 u-border-palette-1-base u-container-style u-expanded-width-sm u-expanded-width-xs u-group u-group-1">
+      <div class="u-container-layout u-container-layout-1">
+        <div [ngClass]="sending ? 'disabled-div' : ''">
+          <div class="u-form u-form-1">
+            <form class="u-clearfix u-form-spacing-20 u-form-vertical u-inner-form" style="padding: 10px"
+              source="custom" name="form">
+              <div class="u-form-group u-form-message">
+                <div *ngIf="inputIndex === 0">
+                  <div class="info-text">Šis pasirinkimas geriausiai tinka, jei turite geros kokybės audio įrašą arba
+                    norite
+                    patys įrašyti</div>
+                  <div class="upload-input-width">
+                    <div class="upload-file-container-dnd file-input" appFileDnd
+                      (fileDropped)="dropFile($event, ['.mp4', '.wav','.mp3','.m4a'], false)">
+                      <div *ngIf="!recorder.recording && !files?.length" class="dnd-div" id="dndDivAudio">
+                        <i class="material-icons dnd-icon">input</i>
+                        <span class="dnd-span">Įtempkite failą</span>
+                      </div>
+                      <div class="upload-file-container">
+                        <mat-form-field class="upload-file-control">
+                          <input id="hiddenFileInput" hidden type="file" accept=".wav,.mp3,.m4a,.mp4"
+                            (change)="filesChange($event.target.files)">
+                          <input id="fileInput" matInput placeholder="Failas" readonly="true"
+                            [(ngModel)]="selectedFileName" (click)="openInput()" matTooltip="Pasirinkite audio failą"
+                            name="fileInput">
+                        </mat-form-field>
+                        <button class="upload-select-button" id="selectFileButton" mat-button (click)="openInput()">
+                          <i class="material-icons">attachment</i>
+                        </button>
+
+                        <button *ngIf="!recorder.recording" class="mic-button" id="startRecordButton" color="primary"
+                          mat-button [disabled]="!canStartRecord()" (click)="startRecord()">
+                          <i class="material-icons">mic</i>
+                        </button>
+                        <button *ngIf="recorder.recording" class="mic-button" color="warn" id="stopRecordButton"
+                          mat-button (click)="stopRecord()">
+                          <i class="material-icons">stop</i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="inputIndex === 2">
+                  <div class="info-text">Šis pasirinkimas tinka, jei neturite atskiro audio įrašo, o tik kartu su video
+                    (.mp4)
+                    failu.
+                    Pvz.: turite Microsoft Teams susitikimo įrašą. Pastaba: šis būdas veikia tik asmeniniuose
+                    kompiuteriuose.
+                    Jei norite
+                    transkribuoti video failą naudodamiesi telefonu ar planšetiniu kompiuteriu,
+                    rinkitės <a id="aIrasas" href="javascript: void(0);" (click)="turnAudioInput()">Įrašas</a> siuntimo
+                    variantą</div>
+                  <div class="upload-input-width">
+                    <div class="upload-file-container-dnd file-input" appFileDnd
+                      (fileDropped)="dropFile($event, ['.mp4'], false)">
+                      <div *ngIf="!files?.length" class="dnd-div" id="dndDivVideo">
+                        <i class="material-icons dnd-icon">input</i>
+                        <span class="dnd-span">Įtempkite failą</span>
+                      </div>
+                      <div class="upload-file-container">
+                        <mat-form-field class="upload-file-control">
+                          <input id="hiddenFileInputVideo" hidden type="file" accept=".mp4"
+                            (change)="filesChange($event.target.files)">
+                          <input id="fileInputVideo" matInput placeholder="Failas" readonly="true"
+                            [(ngModel)]="selectedFileName" (click)="openInputVideo()"
+                            matTooltip="Pasirinkite arba užtempkite video failą" name="fileInputVideo">
+                        </mat-form-field>
+                        <button class="upload-select-button" id="selectFileButton" mat-button
+                          (click)="openInputVideo()">
+                          <i class="material-icons">attachment</i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="inputIndex === 3">
+                  <div class="info-text">Šis pasirinkimas skirtas, kai turite <i>Zoom</i> susitikimo įrašą ir kai
+                    kiekvieno
+                    dalyvio garso takelis išsaugotas atskirame faile. Įkelkite visus susitikimo garso įrašo failus (max
+                    10
+                    failų)</div>
+                  <div class="upload-input-width">
+                    <div class="upload-file-container-dnd file-input" appFileDnd
+                      (fileDropped)="dropFile($event, ['.m4a'], true)">
+                      <div *ngIf="!files?.length" class="dnd-div" id="dndDivZoom">
+                        <i class="material-icons dnd-icon">input</i>
+                        <span class="dnd-span">Įtempkite failus</span>
+                      </div>
+                      <div class="upload-file-container">
+                        <mat-form-field class="upload-file-control">
+                          <input id="hiddenFileInputZoom" hidden type="file" accept=".m4a"
+                            (change)="filesChange($event.target.files)" multiple>
+                          <input id="fileInputZoom" matInput placeholder="Failai" readonly="true"
+                            [(ngModel)]="selectedFileName" (click)="openInputZoom()"
+                            matTooltip="Pasirinkite arba užtempkite audio failus" name="fileInputZoom">
+                        </mat-form-field>
+                        <button class="upload-select-button" id="selectFileButton" mat-button (click)="openInputZoom()">
+                          <i class="material-icons">attachment</i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div [hidden]="recorder.recording || !files?.length">
+                    <div *ngFor="let f of files">
+                      <app-audio [file]="f" [showFileName]="inputIndex == ZoomType"></app-audio>
+                    </div>
+                  </div>
+                  <div [hidden]="!recorder.recording">
+                    <div class="mic-audio-control">
+                      <div id="micWaveDiv" class="mic-wave"></div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- <mat-card class="upload-form">
   <mat-card-content>
     <div class="stepper">
       <div>
@@ -82,9 +285,11 @@
               Pvz.: turite Microsoft Teams susitikimo įrašą. Pastaba: šis būdas veikia tik asmeniniuose kompiuteriuose.
               Jei norite
               transkribuoti video failą naudodamiesi telefonu ar planšetiniu kompiuteriu,
-              rinkitės <a id="aIrasas" href="javascript: void(0);" (click)="turnAudioInput()">Įrašas</a> siuntimo variantą</div>
+              rinkitės <a id="aIrasas" href="javascript: void(0);" (click)="turnAudioInput()">Įrašas</a> siuntimo
+              variantą</div>
             <div class="upload-input-width">
-              <div class="upload-file-container-dnd file-input" appFileDnd (fileDropped)="dropFile($event, ['.mp4'], false)">
+              <div class="upload-file-container-dnd file-input" appFileDnd
+                (fileDropped)="dropFile($event, ['.mp4'], false)">
                 <div *ngIf="!files?.length" class="dnd-div" id="dndDivVideo">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
@@ -108,9 +313,12 @@
             <ng-template mat-tab-label>
               <span class="stepper-title">Zoom</span>
             </ng-template>
-            <div class="info-text">Šis pasirinkimas skirtas, kai turite <i>Zoom</i> susitikimo įrašą ir kai kiekvieno dalyvio garso takelis išsaugotas atskirame faile. Įkelkite visus susitikimo garso įrašo failus (max 10 failų)</div>
+            <div class="info-text">Šis pasirinkimas skirtas, kai turite <i>Zoom</i> susitikimo įrašą ir kai kiekvieno
+              dalyvio garso takelis išsaugotas atskirame faile. Įkelkite visus susitikimo garso įrašo failus (max 10
+              failų)</div>
             <div class="upload-input-width">
-              <div class="upload-file-container-dnd file-input" appFileDnd (fileDropped)="dropFile($event, ['.m4a'], true)">
+              <div class="upload-file-container-dnd file-input" appFileDnd
+                (fileDropped)="dropFile($event, ['.m4a'], true)">
                 <div *ngIf="!files?.length" class="dnd-div" id="dndDivZoom">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failus</span>
@@ -143,48 +351,65 @@
         </div>
       </div>
     </div>
-    <div class="stepper">
-      <div>
-        <div class="stepper-circle">2</div>
-        <div class="stepper-line"></div>
-      </div>
-      <div>
-        <div class="stepper-title">Diktorių skaičius</div>
-        <mat-form-field class="full-width" class="upload-input-width">
-          <mat-select id="speakerCountSelect" name="speakerCount" matInput [(ngModel)]="speakerCount"
-            matTooltip="Pasirinkite diktorių skaičių">
-            <mat-option *ngFor="let sp of speakerCountValues" [value]="sp.id" matTooltip="{{sp.tooltip}}"
-              id="speakerCountOption-{{sp.id}}">{{sp.name}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="stepper bigger-div">
-      <div>
-        <div (click)="showVersion()" class="stepper-circle">3</div>
-        <div class="stepper-line"></div>
-      </div>
-      <div>
-        <div class="stepper-title">El. paštas rezultatams</div>
-        <mat-form-field class="full-width" class="upload-input-width">
-          <input id="emailInput" name="email" matInput [(ngModel)]="email" placeholder="El. paštas" type="email"
-            matTooltip="Įveskite el. paštą">
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="stepper">
-      <div>
-        <div class="stepper-circle">4</div>
-        <div class="stepper-line"></div>
-      </div>
-      <div class="button-send-div">
-        <button *ngIf="!sending" id="uploadButton" mat-raised-button color="primary" [disabled]="!isValid()"
-          (click)="upload()">Siųsti</button>
-        <mat-progress-spinner id="uploadSpinner" *ngIf="sending" class="upload-spinner" color="primary"
-          mode="indeterminate" diameter="40">
-        </mat-progress-spinner>
-      </div>
-    </div>
   </mat-card-content>
-</mat-card>
+</mat-card> -->
+
+<section class="u-align-center u-clearfix u-section-5" id="carousel_f412">
+  <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+    <div class="u-clearfix u-custom-html u-expanded-width u-custom-html-1">
+      <label for="speakerCountSelect">Pasirinkite kalbėtojų skaičių:</label>
+      <select id="speakerCountSelect" name="kalbetojai" class="u-border-none u-btn-1 u-btn-round u-button-style 
+        u-hover-palette-1-light-1 u-palette-3-light-1 u-radius-50" [(ngModel)]="speakerCount">
+        <option *ngFor="let sp of speakerCountValues" [value]="sp.id" id="speakerCountOption-{{sp.id}}">{{sp.name}}
+        </option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<section class="u-clearfix u-section-6" id="sec-f7fe">
+  <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+    <div class="u-align-center u-clearfix u-custom-html u-expanded-width u-custom-html-1">
+      <input type="checkbox" id="sutikimas" name="sutikimas" value="sutikimas">
+      <label for="sutikimas"> Su paslaugų teikimo sąlygomis ir privatumo politika susipažinau ir sutinku</label>
+    </div>
+  </div>
+</section>
+
+<section class="u-align-center u-clearfix u-section-5" id="sec-664c">
+  <div class="u-clearfix u-sheet u-sheet-1">
+    <div class="u-align-center u-form u-form-1">
+      <form class="u-clearfix u-form-horizontal u-form-spacing-10 u-inner-form" source="custom"
+        name="form-1" style="padding: 10px;">
+        <div class="u-clearfix u-sheet u-sheet-1">
+          <div class="u-align-center u-form u-form-1">
+            <div class="u-form-email u-form-group">
+              <label for="email-1ff7" class="u-form-control-hidden u-label"></label>
+              <input type="email" placeholder="Įveskite el. pašto adresą rezultatams gauti" id="emailInput"
+                [(ngModel)]="email" name="email" class="u-border-1 u-border-grey-30 u-input u-input-rectangle u-white"
+                required="true">
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="u-clearfix u-section-7" id="sec-d4b0">
+  <div class="u-clearfix u-sheet u-sheet-1 u-valign-top u-sheet-1">
+    <button [disabled]="!isValid()" (click)="upload()" class="u-border-none u-btn u-btn-1 u-btn-round u-button-style 
+      u-hover-palette-1-light-1 u-palette-3-light-1 u-radius-50 u-btn-1" *ngIf="!sending"
+      id="uploadButton">Vykdyti</button>
+    <div *ngIf="sending" class="upload-spinner"></div>
+  </div>
+
+  <section class="u-align-center u-clearfix u-section-6" id="sec-52ad">
+    <div class="u-clearfix u-sheet u-valign-top u-sheet-1">
+      <div class="u-align-center u-border-4 u-border-palette-1-base u-container-style u-group u-group-1 u-group-1">
+        <div class="u-align-center u-container-layout u-container-layout-1">
+          <p class="u-text u-text-1 u-text-default u-text-1">Informacija vartotojui</p>
+        </div>
+      </div>
+    </div>
+  </section>

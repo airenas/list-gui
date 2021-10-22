@@ -32,7 +32,7 @@
   overflow: hidden;
 }
 
-.upload-file-container-dnd{
+.upload-file-container-dnd {
   display: box;
 }
 
@@ -54,8 +54,32 @@
   padding: 0 $buttonPadding;
 }
 
-.upload-spinner {
-  margin: 0 20px;
+.upload-spinner{ 
+  border: 7px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 7px solid $mainColor;
+  width: 40px;
+  height: 40px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+  margin: 0px auto;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+.disabled-div {
+  pointer-events: none;
+  opacity: 0.6;
 }
 
 .stepper {
@@ -124,10 +148,9 @@
 
 .file-input {
   &.fileover {
-    border-width: 2px;
+    border-width: 2.75px;
     border-style: solid;
-    border-color: mat-color($primary);
-    border-radius: 5px;
+    border-color: $mainColor;
     width: calc(100% - 10px);
   }
 }

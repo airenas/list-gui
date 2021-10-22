@@ -3,3 +3,6 @@ Makefile.options
 ear-app/src/environments/environment.prod.ts
 trans-component-*.tar.gz
 .vscode/launch.json
+dariaus/
+design/
+ear-app/src/assets/design
