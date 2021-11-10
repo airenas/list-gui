@@ -8,7 +8,7 @@
 }
 
 .upload-input-width {
-  min-width: 250px;
+  min-width: 150px;
   width: 100%;
 }
 
@@ -59,47 +59,8 @@
 }
 
 .stepper {
-  position: relative;
-  min-height: 32px;
-}
-
-.stepper>div:first-child {
-  position: static;
-  height: 0;
-}
-
-.stepper>div:last-child {
-  margin-left: 24px;
+  padding-bottom: 16px;
   padding-left: 16px;
-}
-
-.stepper-line {
-  position: absolute;
-  border-left: 1px solid gainsboro;
-  left: 12px;
-  bottom: 5px;
-  top: 29px;
-}
-
-.stepper-circle {
-  background: mat-color($primary);
-  width: 24px;
-  height: 24px;
-  line-height: 24px;
-  border-radius: 16px;
-  position: relative;
-  color: white;
-  text-align: center;
-}
-
-.stepper:last-child .stepper-line {
-  display: none;
-}
-
-.stepper-title {
-  line-height: 24px;
-  font-weight: normal;
-  font-size: 18px;
 }
 
 .input-type-field {
@@ -159,4 +120,47 @@
   padding-left: 20px !important;
   padding-right: 20px !important;
   min-width: 100px !important;
+}
+
+.key-container {
+  width: 100%;
+  align-items: center;
+  display: flex;
+  overflow: hidden;
+}
+
+.key-form {
+  width: 100%;
+}
+
+.key-control {
+  width: 100%;
+  display: inline-block;
+}
+
+.key-button {
+  min-width: 0px;
+  width: $buttonSize;
+  padding: 0 0px;
+  margin-left: -$buttonSize;
+  opacity: 0.7;
+}
+
+.condition-check {
+  padding-right: 10px;
+}
+
+.condition-container{
+  width: 100%;
+  align-items: center;
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.condition-text {
+  padding-top: 0px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  font-size: 95%;
+  font-weight: bold;
 }

@@ -1,15 +1,29 @@
 <mat-card class="upload-form">
   <mat-card-content>
     <div class="stepper">
-      <div>
-        <div class="stepper-circle">1</div>
-        <div class="stepper-line"></div>
-      </div>
+      <form id="loginform" action="" method="post" autocomplete="on">
+        <div class="key-container">
+          <mat-form-field class="key-control">
+            <input id="userKey" name="password" matInput [(ngModel)]="userKey" [placeholder]="userKeyPlaceHolder"
+              [type]="keyType" matTooltip="Įveskite vartotojo kodą. Demo versijoje nereikia"
+              autocomplete="password"
+              >
+          </mat-form-field>
+          <button *ngIf="keyType === 'password'" class="key-button" mat-button (click)="showKey()">
+            <i class="material-icons">visibility</i>
+          </button>
+          <button *ngIf="keyType !== 'password'" class="key-button" mat-button (click)="hideKey()">
+            <i class="material-icons">visibility_off</i>
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="stepper">
       <div class="inner-tab-div">
         <mat-tab-group [(selectedIndex)]="inputIndex">
           <mat-tab [disabled]="sending">
             <ng-template mat-tab-label>
-              <span class="stepper-title">Įrašas</span>
+              <span class="stepper-title">Garso failo transkripcija</span>
             </ng-template>
             <div class="info-text">Šis pasirinkimas geriausiai tinka, jei turite geros kokybės audio įrašą arba norite
               patys įrašyti</div>
@@ -46,7 +60,7 @@
 
           <mat-tab [disabled]="sending">
             <ng-template mat-tab-label>
-              <span class="stepper-title">Tel. įrašas</span>
+              <span class="stepper-title">Garso failo transkripcija</span>
             </ng-template>
             <div class="info-text">Šis pasirinkimas rekomenduojamas, kai turimas audio įrašas yra žemos (8 kHz) kokybės,
               pvz.:
@@ -75,16 +89,18 @@
           </mat-tab>
           <mat-tab [disabled]="sending">
             <ng-template mat-tab-label>
-              <span class="stepper-title">Video</span>
+              <span class="stepper-title">Vaizdo failo transkripcija</span>
             </ng-template>
             <div class="info-text">Šis pasirinkimas tinka, jei neturite atskiro audio įrašo, o tik kartu su video (.mp4)
               failu.
               Pvz.: turite Microsoft Teams susitikimo įrašą. Pastaba: šis būdas veikia tik asmeniniuose kompiuteriuose.
               Jei norite
               transkribuoti video failą naudodamiesi telefonu ar planšetiniu kompiuteriu,
-              rinkitės <a id="aIrasas" href="javascript: void(0);" (click)="turnAudioInput()">Įrašas</a> siuntimo variantą</div>
+              rinkitės <a id="aIrasas" href="javascript: void(0);" (click)="turnAudioInput()">Įrašas</a> siuntimo
+              variantą</div>
             <div class="upload-input-width">
-              <div class="upload-file-container-dnd file-input" appFileDnd (fileDropped)="dropFile($event, ['.mp4'], false)">
+              <div class="upload-file-container-dnd file-input" appFileDnd
+                (fileDropped)="dropFile($event, ['.mp4'], false)">
                 <div *ngIf="!files?.length" class="dnd-div" id="dndDivVideo">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
@@ -106,11 +122,14 @@
           </mat-tab>
           <mat-tab [disabled]="sending">
             <ng-template mat-tab-label>
-              <span class="stepper-title">Zoom</span>
+              <span class="stepper-title">Zoom rinkinio transkripcija</span>
             </ng-template>
-            <div class="info-text">Šis pasirinkimas skirtas, kai turite <i>Zoom</i> susitikimo įrašą ir kai kiekvieno dalyvio garso takelis išsaugotas atskirame faile. Įkelkite visus susitikimo garso įrašo failus (max 10 failų)</div>
+            <div class="info-text">Šis pasirinkimas skirtas, kai turite <i>Zoom</i> susitikimo įrašą ir kai kiekvieno
+              dalyvio garso takelis išsaugotas atskirame faile. Įkelkite visus susitikimo garso įrašo failus (max 10
+              failų)</div>
             <div class="upload-input-width">
-              <div class="upload-file-container-dnd file-input" appFileDnd (fileDropped)="dropFile($event, ['.m4a'], true)">
+              <div class="upload-file-container-dnd file-input" appFileDnd
+                (fileDropped)="dropFile($event, ['.m4a'], true)">
                 <div *ngIf="!files?.length" class="dnd-div" id="dndDivZoom">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failus</span>
@@ -144,43 +163,34 @@
       </div>
     </div>
     <div class="stepper">
-      <div>
-        <div class="stepper-circle">2</div>
-        <div class="stepper-line"></div>
-      </div>
-      <div>
-        <div class="stepper-title">Diktorių skaičius</div>
-        <mat-form-field class="full-width" class="upload-input-width">
-          <mat-select id="speakerCountSelect" name="speakerCount" matInput [(ngModel)]="speakerCount"
-            matTooltip="Pasirinkite diktorių skaičių">
-            <mat-option *ngFor="let sp of speakerCountValues" [value]="sp.id" matTooltip="{{sp.tooltip}}"
-              id="speakerCountOption-{{sp.id}}">{{sp.name}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+      <mat-form-field class="full-width" class="upload-input-width">
+        <mat-label>Kalbėtojų skaičius</mat-label>
+        <mat-select id="speakerCountSelect" name="speakerCount" matInput [(ngModel)]="speakerCount"
+          matTooltip="Pasirinkite diktorių skaičių">
+          <mat-option *ngFor="let sp of speakerCountValues" [value]="sp.id" matTooltip="{{sp.tooltip}}"
+            id="speakerCountOption-{{sp.id}}">{{sp.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
-    <div class="stepper bigger-div">
-      <div>
-        <div (click)="showVersion()" class="stepper-circle">3</div>
-        <div class="stepper-line"></div>
-      </div>
-      <div>
-        <div class="stepper-title">El. paštas rezultatams</div>
-        <mat-form-field class="full-width" class="upload-input-width">
-          <input id="emailInput" name="email" matInput [(ngModel)]="email" placeholder="El. paštas" type="email"
-            matTooltip="Įveskite el. paštą">
-        </mat-form-field>
+    <div class="stepper">
+      <mat-form-field class="full-width" class="upload-input-width">
+        <input id="emailInput" name="email" matInput [(ngModel)]="email" placeholder="El. paštas" type="email"
+          matTooltip="Įveskite el. paštą">
+      </mat-form-field>
+    </div>
+    <div class="stepper">
+      <div class="condition-container">
+        <mat-checkbox class="condition-check" color="primary" [(ngModel)]="conditionChecked"></mat-checkbox>
+        <p class="condition-text" (click)="conditionClick()" id="conditionText">Su paslaugų teikimo sąlygomis ir
+          privatumo politika susipažinau ir sutinku</p>
       </div>
     </div>
     <div class="stepper">
-      <div>
-        <div class="stepper-circle">4</div>
-        <div class="stepper-line"></div>
-      </div>
       <div class="button-send-div">
         <button *ngIf="!sending" id="uploadButton" mat-raised-button color="primary" [disabled]="!isValid()"
-          (click)="upload()">Siųsti</button>
+          matTooltip="Transkripcijos užklausa talpinama užduočių eilėje. Pabaigusi darbą, sistema atsiųs transkripcijos rezultatą nurodytu el. paštu"
+          (click)="upload()">Vykdyti</button>
         <mat-progress-spinner id="uploadSpinner" *ngIf="sending" class="upload-spinner" color="primary"
           mode="indeterminate" diameter="40">
         </mat-progress-spinner>

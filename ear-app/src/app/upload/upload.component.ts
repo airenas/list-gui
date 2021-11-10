@@ -1,19 +1,19 @@
-import { Observable } from 'rxjs/Observable';
-import { SendFileResult } from './../api/send-file-result';
-import { Component, OnInit, ChangeDetectorRef, OnDestroy, AfterViewInit } from '@angular/core';
-import { TranscriptionService } from '../service/transcription.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BaseComponent } from '../base/base.component';
-import { ParamsProviderService } from '../service/params-provider.service';
-import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
-import { AudioPlayer, AudioPlayerFactory } from '../utils/audio.player';
-import { Microphone, MicrophoneFactory } from '../utils/microphone';
-import { environment } from 'src/environments/environment';
+import { ActivatedRoute, Router } from '@angular/router';
 import 'rxjs/add/observable/interval';
-import { FileUtils } from '../utils/file';
+import { Observable } from 'rxjs/Observable';
+import { environment } from 'src/environments/environment';
+import { BaseComponent } from '../base/base.component';
 import { Mp4ExtratorService } from '../service/mp4-extrator.service';
+import { ParamsProviderService } from '../service/params-provider.service';
+import { TranscriptionService } from '../service/transcription.service';
+import { AudioPlayer, AudioPlayerFactory } from '../utils/audio.player';
+import { FileUtils } from '../utils/file';
+import { Microphone, MicrophoneFactory } from '../utils/microphone';
+import { SendFileResult } from './../api/send-file-result';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -39,6 +39,13 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   files: File[];
   selectedFileName: string; // hold our file name
   private _email: string;
+
+  userKeyPlaceHolder: string;
+  keyType: string;
+
+  conditionChecked: boolean;
+
+  private _userKey: string;
   recorder: Microphone;
   audioPlayer: AudioPlayer;
   sending = false;
@@ -92,9 +99,11 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   initSpeakerCount() {
-    this.speakerCountValues = [{ id: '-', name: '--', tooltip: 'Automatiškai nustatomas diktorių skaičius' },
-    { id: '1', name: '1', tooltip: 'Vieno diktoriaus garso įrašas' },
-    { id: '2', name: '2', tooltip: 'Garso įraše kalba du diktoriai' }];
+    this.speakerCountValues = [
+      { id: '1', name: '1', tooltip: 'Vieno kalbėtojo garso įrašas' },
+      { id: '2', name: '2', tooltip: 'Garso įraše kalba du kalbėtojai' },
+      { id: '-', name: 'Pasirinkti automatiškai', tooltip: 'Automatiškai nustatomas kalbėtojų skaičius' }
+    ];
     this._speakerCount = this.paramsProviderService.getSpeakerCount();
     if ((this._speakerCount || '') === '') {
       this._speakerCount = '-';
@@ -103,6 +112,8 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
 
   initParams() {
     this._uploadParamSkipNumJoin = this.route.snapshot.queryParamMap.get('skipNumJoin') === '1';
+    this.hideKey();
+    this.updateUserkeyPlaceHolder(this._userKey);
     console.log('skipNumJoin=', this._uploadParamSkipNumJoin);
   }
 
@@ -238,6 +249,15 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     this.paramsProviderService.setEmail(email);
   }
 
+  get userKey(): string {
+    return this._userKey;
+  }
+
+  set userKey(userKey: string) {
+    this._userKey = userKey;
+    this.updateUserkeyPlaceHolder(this._userKey)
+  }
+
   recognizer(index: number): string {
     if (index === this.AudioType || index === this.ZoomType) {
       return 'audioDefault';
@@ -262,7 +282,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   isValid() {
-    return this.files?.length && this._email && !this.recorder.recording;
+    return  this.conditionChecked && this.files?.length && this._email && !this.recorder.recording;
   }
 
   startRecord() {
@@ -284,6 +304,22 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     if (this.versionClick > 4) {
       this.showInfo('Version: ' + environment.version);
     }
+  }
+
+  updateUserkeyPlaceHolder(_userKey: string) {
+    this.userKeyPlaceHolder = (_userKey ?? '') === '' ? "Įveskite vartotojo kodą. Demo versijoje nereikia" : 'Vartotojo kodas';
+  }
+
+  showKey() {
+    this.keyType = "";
+  }
+
+  hideKey() {
+    this.keyType = "password";
+  }
+
+  conditionClick() {
+    this.conditionChecked = !this.conditionChecked;
   }
 }
 
