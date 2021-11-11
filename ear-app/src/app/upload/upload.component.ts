@@ -206,8 +206,9 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     this.transcriptionService.sendFile({
       files: files, email: this.email,
       recognizer: this.recognizer(this.inputIndex),
-      speakerCount: (this.speakerCount === '-' ? '' : this.speakerCount),
-      skipNumJoin: this._uploadParamSkipNumJoin
+      speakerCount: ((this.speakerCount ?? '-') === '-' ? '' : this.speakerCount),
+      skipNumJoin: this._uploadParamSkipNumJoin,
+      key: this._userKey ?? ''
     })
       .subscribe(
         result => {

@@ -3,7 +3,7 @@ import { Config } from './../config';
 import { Injectable } from '@angular/core';
 import { FileData } from './file-data';
 import { SendFileResult } from './../api/send-file-result';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -70,12 +70,16 @@ export class HttpTranscriptionService implements TranscriptionService {
     if (fileData.skipNumJoin === true) {
       formData.append('skipNumJoin', '1');
     }
+
     const httpOptions = {
       headers: new HttpHeaders({
         'Accept': 'application/json'
-      })
+      }),
+      params: new HttpParams()
     };
-
+    if (fileData.key !== '') {
+      httpOptions.params = httpOptions.params.append('key', fileData.key);
+    }
     return this._http.post(this.sendFileUrl, formData, httpOptions)
       .map(res => {
         return <SendFileResult>res;

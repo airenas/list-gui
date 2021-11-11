@@ -4,4 +4,5 @@ export class FileData {
     recognizer: string;
     speakerCount: string;
     skipNumJoin?: boolean;
+    key?: string;
 }
