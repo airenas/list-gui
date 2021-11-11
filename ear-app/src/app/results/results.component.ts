@@ -80,39 +80,14 @@ class FileURLKeeper {
   initPossibleFiles(): Map<string, FileInfo> {
     const values: FileInfo[] = [
       {
-        id: 'dfResult',
-        url: 'result.txt',
-        title: 'Rezultatas - paprastas (.txt)'
-      },
-      {
         id: 'dfResultFinal',
         url: 'resultFinal.txt',
         title: 'Rezultatas (.txt)'
       },
       {
-        id: 'dfLat',
-        url: 'lat.txt',
-        title: 'Kaldi grafas (.txt)'
-      },
-      {
-        id: 'dfLatGz',
-        url: 'lat.gz',
-        title: 'Kaldi grafas (.gz)'
-      },
-      {
-        id: 'dfN10',
-        url: 'lat.nb10.txt',
-        title: 'Kaldi 10-geriausių variantų (.txt)'
-      },
-      {
         id: 'dfLatRescore',
         url: FileURLKeeper.latRestoredURL,
-        title: 'Grafas redagavimui (.txt)'
-      },
-      {
-        id: 'dfLatRescoreGz',
-        url: 'lat.restored.gz',
-        title: 'Grafas redagavimui (.gz)'
+        title: 'Sinchronizavimo rezultatas'
       },
       {
         id: 'dfWebVTT',
