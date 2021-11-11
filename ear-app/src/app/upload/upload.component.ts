@@ -43,7 +43,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   userKeyPlaceHolder: string;
   keyType: string;
 
-  conditionChecked: boolean;
+  private _conditionChecked: boolean;
 
   private _userKey: string;
   recorder: Microphone;
@@ -69,6 +69,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     this.audioPlayer = this.audioPlayerFactory.create('#audioWaveDiv', (ev) => this.cdr.detectChanges());
     this.recorder = this.microphoneFactory.create('#micWaveDiv', (ev, data) => this.recordEvent(ev, data));
     this._email = this.paramsProviderService.getEmail();
+    this._conditionChecked = this.paramsProviderService.getCondition();
     this.initSpeakerCount();
     this.initParams();
   }
@@ -113,6 +114,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   initParams() {
     this._uploadParamSkipNumJoin = this.route.snapshot.queryParamMap.get('skipNumJoin') === '1';
     this.hideKey();
+    this._userKey = this.paramsProviderService.getUserKey();
     this.updateUserkeyPlaceHolder(this._userKey);
     console.log('skipNumJoin=', this._uploadParamSkipNumJoin);
   }
@@ -249,13 +251,23 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     this.paramsProviderService.setEmail(email);
   }
 
+  get conditionChecked(): boolean {
+    return this._conditionChecked;
+  }
+
+  set conditionChecked(conditionChecked: boolean) {
+    this._conditionChecked = conditionChecked;
+    this.paramsProviderService.setCondition(conditionChecked);
+  }
+
   get userKey(): string {
     return this._userKey;
   }
 
   set userKey(userKey: string) {
     this._userKey = userKey;
-    this.updateUserkeyPlaceHolder(this._userKey)
+    this.updateUserkeyPlaceHolder(this._userKey);
+    this.paramsProviderService.setUserKey(this._userKey);
   }
 
   recognizer(index: number): string {

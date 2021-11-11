@@ -14,6 +14,10 @@ export abstract class ParamsProviderService {
   abstract getSpeakerCount(): string;
   abstract setInputMethod(inp: number): void;
   abstract getInputMethod(): number;
+  abstract setUserKey(key: string): void;
+  abstract getUserKey(): string;
+  abstract getCondition(): boolean;
+  abstract setCondition(cond: boolean);
 }
 
 @Injectable()
@@ -26,8 +30,22 @@ export class LocalStorageParamsProviderService implements ParamsProviderService 
   private _recognizer: string;
   private _speakerCount: string;
   private _inputMethod: number;
+  private _userKey: string;
+  private _cond: boolean;
 
   constructor() {
+  }
+  getCondition(): boolean {
+    return this._cond;
+  }
+  setCondition(cond: boolean) {
+    this._cond = cond;
+  }
+  setUserKey(key: string): void {
+    this._userKey = key;
+  }
+  getUserKey(): string {
+    return this._userKey;
   }
   setInputMethod(inp: number): void {
     this._inputMethod = inp;
