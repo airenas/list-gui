@@ -196,5 +196,10 @@
         </mat-progress-spinner>
       </div>
     </div>
+    <div class="stepper" *ngIf="error  !== ''">
+      <div class="error-container">
+        <p class="error-text" id="infoText">{{error}}</p>
+      </div>
+    </div>
   </mat-card-content>
 </mat-card>

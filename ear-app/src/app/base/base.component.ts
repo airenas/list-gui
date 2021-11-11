@@ -2,12 +2,15 @@ import { TranscriptionService } from '../service/transcription.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 export abstract class BaseComponent {
+  error: string;
 
-  constructor(protected transcriptionService: TranscriptionService, protected snackBar: MatSnackBar) { }
+  constructor(protected transcriptionService: TranscriptionService, protected snackBar: MatSnackBar) { 
+    this.error = '';
+  }
 
   showError(msg: string, error: any) {
     console.error('Error', error);
-    this.snackBar.open(this.asString(msg, error), null, { duration: 3000 });
+    this.error = this.asString(msg, error);
   }
 
   asString(msg: string, error: any): string {

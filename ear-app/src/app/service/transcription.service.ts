@@ -27,10 +27,10 @@ export class HttpTranscriptionService implements TranscriptionService {
   static asString(error: HttpErrorResponse): string {
     if (error !== null) {
       if (error.status === 401) {
-        return 'Neturite teisių?';
+        return 'Vartotojo kodas negalioja';
       }
       if (error.status === 403) {
-        return 'Baigėsi limitas';
+        return 'Nepakanka kreditų. Prašome pateikti mažesnės apimties failą arba išsipirkti papildomai kreditų';
       }
       const value = String(error.error);
       if (value.includes('Wrong email')) {
@@ -46,7 +46,7 @@ export class HttpTranscriptionService implements TranscriptionService {
         return 'Nepavyko parinkti atpažintuvą';
       }
     }
-    return 'Serviso klaida';
+    return 'Sistemos klaida. Prašome kreiptis į sistemos administratorių info@intelektika.lt';
   }
 
   constructor(public _http: HttpClient, _config: Config) {

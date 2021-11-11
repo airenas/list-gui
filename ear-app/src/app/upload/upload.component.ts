@@ -186,6 +186,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
 
   upload() {
     this.sending = true;
+    this.error = '';
 
     if (this.inputIndex === this.VideoType) {
       this.mp4Extractor.extract(this.files[0]).subscribe({
@@ -217,7 +218,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
         },
         error => {
           this.sending = false;
-          this.showError('Nepavyko nusiųsti failo.', error);
+          this.showError('', error);
         }
       );
   }

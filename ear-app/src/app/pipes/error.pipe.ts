@@ -17,7 +17,7 @@ export class ErrorPipe implements PipeTransform {
     }
     if (value.errorCode === ErrorCode.ServiceError) {
       if (!this.showDetails) {
-        return 'Serviso klaida';
+        return 'Sistemos klaida. Prašome kreiptis į sistemos administratorių info@intelektika.lt';
       }
     }
     if (value.errorCode === ErrorCode.LenDiffer) {
