@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Status } from '../api/status';
 
 @Pipe({
   name: 'resultText'
@@ -9,7 +8,15 @@ export class ResultTextPipe implements PipeTransform {
     if (value === null) {
       return value;
     }
+    value = this.takeMax(value, 150)
     const re = /\n/gi;
-    return value.replace(re, '\n  ');
+    return '  ' + value.replace(re, '\n  ');
+  }
+
+  takeMax(value: string, count: number): string {
+    if (value.length > count) {
+      value = value.substring(0, count) + '...';
+    }
+    return value;
   }
 }
