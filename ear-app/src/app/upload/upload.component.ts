@@ -64,7 +64,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   ZoomType = 3;
 
   ngOnInit() {
-    console.log('Init upload');
+    console.log('Version=' + environment.version);
     this.inputIndexInt = this.paramsProviderService.getInputMethod();
     this.audioPlayer = this.audioPlayerFactory.create('#audioWaveDiv', (ev) => this.cdr.detectChanges());
     this.recorder = this.microphoneFactory.create('#micWaveDiv', (ev, data) => this.recordEvent(ev, data));
@@ -75,10 +75,8 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   ngAfterViewInit() {
-    console.log('View init');
     if (this.paramsProviderService.lastSelectedFile !== null) {
       const tm = Observable.interval(50).subscribe((v) => {
-        console.log('On file timer');
         tm.unsubscribe();
         this.fileChange(this.paramsProviderService.lastSelectedFile);
       });
@@ -86,7 +84,6 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   ngOnDestroy() {
-    console.log('Destroy upload');
     this.destroyind = true;
     this.cancelRecording();
     this.audioPlayer.destroy();
