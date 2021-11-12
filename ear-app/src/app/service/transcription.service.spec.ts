@@ -27,13 +27,13 @@ describe('HttpTranscriptionService', () => {
   }
 
   it('should parse messages', (() => {
-    expect(makeError('error')).toBe('Serviso klaida');
+    expect(makeError('error')).toBe('Sistemos klaida. Prašome kreiptis į sistemos administratorių info@intelektika.lt');
     expect(makeError('Wrong email')).toBe('Neteisingas El. paštas');
     expect(makeError('No email')).toBe('Nenurodytas El. paštas');
     expect(makeError('No file')).toBe('Nenurodytas failas');
     expect(makeError('No recognizer')).toBe('Nepavyko parinkti atpažintuvą');
     expect(makeError('Unknown recognizer: aaaa')).toBe('Nepavyko parinkti atpažintuvą');
-    expect(makeErrorCode(401)).toBe('Neturite teisių?');
-    expect(makeErrorCode(403)).toBe('Baigėsi limitas');
+    expect(makeErrorCode(401)).toBe('Vartotojo kodas negalioja');
+    expect(makeErrorCode(403)).toBe('Nepakanka kreditų. Prašome pateikti mažesnės apimties failą arba išsipirkti papildomai kreditų');
   }));
 });

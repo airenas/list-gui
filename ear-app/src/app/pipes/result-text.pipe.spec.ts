@@ -15,17 +15,22 @@ describe('ResultTextPipe', () => {
   it('returns the same', () => {
     const pipe = new ResultTextPipe();
     const transformed = pipe.transform('olia');
-    expect(transformed).toEqual('olia');
+    expect(transformed).toEqual('  olia');
   });
 
   it('changes new line symbol', () => {
     const pipe = new ResultTextPipe();
     const transformed = pipe.transform('olia\nolia');
-    expect(transformed).toEqual('olia\n  olia');
+    expect(transformed).toEqual('  olia\n  olia');
   });
   it('changes several new line symbols', () => {
     const pipe = new ResultTextPipe();
     const transformed = pipe.transform('olia\nolia\nooo');
-    expect(transformed).toEqual('olia\n  olia\n  ooo');
+    expect(transformed).toEqual('  olia\n  olia\n  ooo');
+  });
+  it('trims text', () => {
+    const pipe = new ResultTextPipe();
+    const transformed = pipe.takeMax('olia\nolia\nooo', 10);
+    expect(transformed).toEqual('olia\nolia\n...');
   });
 });

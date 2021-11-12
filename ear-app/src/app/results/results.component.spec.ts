@@ -227,9 +227,9 @@ describe('ResultsComponent', () => {
     component.menuTrigger.openMenu();
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      const dfs = ['dfResult', 'dfResultFinal', 'dfLat', 'dfLatGz', 'dfN10', 'dfLatRescore', 'dfLatRescoreGz', 'dfWebVTT'];
+      const dfs = ['dfResultFinal', 'dfLatRescore', 'dfWebVTT'];
       dfs.forEach(element => {
-        expect(TestHelper.Visible(fixture.debugElement.query(By.css('#' + element)))).toBe(true);
+        expect(TestHelper.Visible(fixture.debugElement.query(By.css('#' + element)))).toBe(true, 'Problem with ' + element);
       });
     });
   }));
@@ -251,10 +251,10 @@ describe('ResultsComponent', () => {
     });
   }));
 
-  it('should call download', async(() => {
+  it('should call download result Final', async(() => {
     const r = {
       status: Status.Completed, id: 'iddddd', error: '', recognizedText: '', progress: 0,
-      avResults: ['result.txt']
+      avResults: ['resultFinal.txt']
     };
     component.onResult(r);
     fixture.detectChanges();
@@ -263,10 +263,10 @@ describe('ResultsComponent', () => {
     const dwnSpy = spyOn(component.fileKeeper, 'download').and.callFake(function (a: string) { arg = a; });
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      fixture.debugElement.query(By.css('#dfResult')).nativeElement.click();
+      fixture.debugElement.query(By.css('#dfResultFinal')).nativeElement.click();
       fixture.detectChanges();
       expect(dwnSpy).toHaveBeenCalledTimes(1);
-      expect(arg).toBe('result.txt');
+      expect(arg).toBe('resultFinal.txt');
     });
   }));
 
@@ -377,7 +377,7 @@ describe('ResultsComponent', () => {
     component.onResult(r);
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect(fixture.debugElement.query(By.css('#errorDiv')).nativeElement.innerText).toContain('Serviso klaida');
+      expect(fixture.debugElement.query(By.css('#errorDiv')).nativeElement.innerText).toContain('Sistemos klaida');
     });
   }));
 

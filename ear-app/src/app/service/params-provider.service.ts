@@ -36,7 +36,7 @@ export class LocalStorageParamsProviderService implements ParamsProviderService 
   constructor() {
   }
   getCondition(): boolean {
-    return this._cond;
+    return this._cond ?? false;
   }
   setCondition(cond: boolean) {
     this._cond = cond;
@@ -45,7 +45,7 @@ export class LocalStorageParamsProviderService implements ParamsProviderService 
     this._userKey = key;
   }
   getUserKey(): string {
-    return this._userKey;
+    return this._userKey ?? '';
   }
   setInputMethod(inp: number): void {
     this._inputMethod = inp;

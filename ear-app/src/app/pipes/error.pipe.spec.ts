@@ -41,6 +41,6 @@ describe('ErrorPipe', () => {
   it('hide service error', () => {
     const pipe = new ErrorPipe(false);
     const transformed = pipe.transform({id: 'id', status: Status.Uploaded, errorCode: ErrorCode.ServiceError, error: 'olia'});
-    expect(transformed).toEqual('Serviso klaida');
+    expect(transformed).toEqual('Sistemos klaida. Prašome kreiptis į sistemos administratorių info@intelektika.lt');
   });
 });
