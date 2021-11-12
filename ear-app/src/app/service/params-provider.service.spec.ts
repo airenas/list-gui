@@ -14,9 +14,23 @@ export class TestParamsProviderService implements ParamsProviderService {
   private _recognizer: string;
   private _speakerCount: string;
   private _inpMethod: number;
+  private _key: string;
+  private _condition: boolean;
 
 
   constructor() {
+  }
+  setUserKey(key: string): void {
+    this._key = key;
+  }
+  getUserKey(): string {
+    return this._key;
+  }
+  getCondition(): boolean {
+    return this._condition;
+  }
+  setCondition(cond: boolean) {
+    this._condition = cond;
   }
   setInputMethod(inp: number): void {
     this._inpMethod = inp;
@@ -113,5 +127,15 @@ describe('ParamsProviderService', () => {
   it('should remember inputMethod from local storage', inject([ParamsProviderService], (service: ParamsProviderService) => {
     service.setInputMethod(2);
     expect(new LocalStorageParamsProviderService().getInputMethod()).toBe(2);
+  }));
+  it('should remember key in memory', inject([ParamsProviderService], (service: ParamsProviderService) => {
+    service.setUserKey('olia');
+    expect(service.getUserKey()).toBe('olia');
+    expect(new LocalStorageParamsProviderService().getUserKey()).toBe('');
+  }));
+  it('should remember condition in memory', inject([ParamsProviderService], (service: ParamsProviderService) => {
+    service.setCondition(true);
+    expect(service.getCondition()).toBe(true);
+    expect(new LocalStorageParamsProviderService().getCondition()).toBe(false);
   }));
 });
