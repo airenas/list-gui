@@ -1,3 +1,4 @@
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TestMp4ExtratorService } from './../service/mp4-extrator.service.spec';
 import { Mp4ExtratorService } from './../service/mp4-extrator.service';
 import { EditorURLProviderService } from './../service/editor-urlprovider.service';
@@ -111,7 +112,7 @@ export class TestHelper {
   exports: [
     MatTabsModule, MatButtonModule, MatInputModule, FormsModule,
     MatSnackBarModule, MatCardModule, MatProgressBarModule, MatProgressSpinnerModule, MatSelectModule, MatTooltipModule,
-    MatMenuModule, NoopAnimationsModule,
+    MatMenuModule, NoopAnimationsModule, MatCheckboxModule,
     NgxFilesizeModule
   ],
 })

@@ -1,23 +1,21 @@
-import { AudioComponent } from './../audio/audio.component';
-import { Observable } from 'rxjs/Observable';
-import { TestAudioPlayerFactory } from './../utils/audio.player.specs';
-import { TranscriptionService } from './../service/transcription.service';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { UploadComponent } from './upload.component';
-import { MockActivatedRoute, MockSubscriptionService, MockTestService } from '../base/test.app.module';
-import { TestAppModule, FileHelper, TestHelper } from '../base/test.app.module';
-import { RouterTestingModule } from '@angular/router/testing';
-import { By } from '@angular/platform-browser';
-import { ParamsProviderService } from '../service/params-provider.service';
 import { APP_BASE_HREF } from '@angular/common';
-import { ResultSubscriptionService } from '../service/result-subscription.service';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { NgxFilesizeModule } from 'ngx-filesize';
+import { FileHelper, MockActivatedRoute, MockSubscriptionService, MockTestService, TestAppModule, TestHelper } from '../base/test.app.module';
+import { ParamsProviderService } from '../service/params-provider.service';
+import { TestParamsProviderService } from '../service/params-provider.service.spec';
+import { ResultSubscriptionService } from '../service/result-subscription.service';
 import { AudioPlayerFactory } from '../utils/audio.player';
 import { MicrophoneFactory } from '../utils/microphone';
 import { TestMicrophoneFactory } from '../utils/microphone.specs';
-import { TestParamsProviderService } from '../service/params-provider.service.spec';
-import { NgxFilesizeModule } from 'ngx-filesize';
+import { AudioComponent } from './../audio/audio.component';
+import { TranscriptionService } from './../service/transcription.service';
+import { TestAudioPlayerFactory } from './../utils/audio.player.specs';
+import { UploadComponent } from './upload.component';
+
 
 class TestUtil {
   static configure(providers: any[]) {
@@ -74,6 +72,34 @@ describe('UploadComponent', () => {
       .nativeElement.getAttribute('placeholder')).toBe('El. paštas');
   }));
 
+  it('should have UseKey placeholder', async(() => {
+    expect(fixture.debugElement.query(By.css('#userKey'))
+      .nativeElement.getAttribute('placeholder')).toBe('Įveskite vartotojo kodą. Demo versijoje nereikia');
+  }));
+
+  it('should change UseKey placeholder', async(() => {
+    component.userKey = 'olia';
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(fixture.debugElement.query(By.css('#userKey'))
+        .nativeElement.getAttribute('placeholder')).toBe('Vartotojo kodas');
+    });
+  }));
+
+  it('should have password type for UseKey', async(() => {
+    expect(fixture.debugElement.query(By.css('#userKey'))
+      .nativeElement.getAttribute('type')).toBe('password');
+  }));
+
+  it('should change password type for UseKey', async(() => {
+    component.showKey();
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(fixture.debugElement.query(By.css('#userKey'))
+        .nativeElement.getAttribute('type')).toBe('text');
+    });
+  }));
+
   it('should have file data when file selected', async(() => {
     component.fileChange(new FileHelper().createFakeFile());
     fixture.debugElement.query(By.css('#hiddenFileInput')).nativeElement.dispatchEvent(new Event('input'));
@@ -93,6 +119,7 @@ describe('UploadComponent', () => {
     expect(fixture.debugElement.query(By.css('#uploadButton')).nativeElement.disabled).toBe(true);
     component.fileChange(new FileHelper().createFakeFile());
     component.email = 'olia';
+    component.conditionChecked = true;
     fixture.debugElement.query(By.css('#hiddenFileInput')).nativeElement.dispatchEvent(new Event('input'));
     fixture.detectChanges();
     fixture.whenStable().then(() => {
@@ -103,6 +130,7 @@ describe('UploadComponent', () => {
   it('should invoke upload on click', async(() => {
     component.fileChange(new FileHelper().createFakeFile());
     component.email = 'olia';
+    component.conditionChecked = true;
     fixture.debugElement.query(By.css('#hiddenFileInput')).nativeElement.dispatchEvent(new Event('input'));
     fixture.detectChanges();
     fixture.whenStable().then(() => {
@@ -477,6 +505,30 @@ describe('UploadComponent Own Mock', () => {
     fixture.whenStable().then(() => {
       component.recorder.start();
       expect(component._uploadParamSkipNumJoin).toEqual(false);
+    });
+  }));
+
+  it('should default condition checked', async(() => {
+    const params = new TestParamsProviderService();
+    params.setCondition(true);
+    TestUtil.configure(TestUtil.providers(params));
+    fixture = TestBed.createComponent(UploadComponent);
+    component = fixture.debugElement.componentInstance;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(component.conditionChecked).toEqual(true);
+    });
+  }));
+
+  it('should default user key', async(() => {
+    const params = new TestParamsProviderService();
+    params.setUserKey('olia');
+    TestUtil.configure(TestUtil.providers(params));
+    fixture = TestBed.createComponent(UploadComponent);
+    component = fixture.debugElement.componentInstance;
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      expect(component.userKey).toEqual('olia');
     });
   }));
 

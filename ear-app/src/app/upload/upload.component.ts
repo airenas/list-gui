@@ -325,7 +325,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   showKey() {
-    this.keyType = '';
+    this.keyType = 'text';
   }
 
   hideKey() {
