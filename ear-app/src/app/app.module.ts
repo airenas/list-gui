@@ -18,7 +18,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import {MatCheckboxModule} from '@angular/material/checkbox'; 
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import { ShowOnDirtyErrorStateMatcher, ErrorStateMatcher } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';

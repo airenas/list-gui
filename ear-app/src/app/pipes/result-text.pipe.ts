@@ -8,7 +8,7 @@ export class ResultTextPipe implements PipeTransform {
     if (value === null) {
       return value;
     }
-    value = this.takeMax(value, 150)
+    value = this.takeMax(value, 150);
     const re = /\n/gi;
     return '  ' + value.replace(re, '\n  ');
   }

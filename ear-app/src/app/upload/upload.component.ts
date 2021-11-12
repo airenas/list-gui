@@ -321,15 +321,15 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   updateUserkeyPlaceHolder(_userKey: string) {
-    this.userKeyPlaceHolder = (_userKey ?? '') === '' ? "Įveskite vartotojo kodą. Demo versijoje nereikia" : 'Vartotojo kodas';
+    this.userKeyPlaceHolder = (_userKey ?? '') === '' ? 'Įveskite vartotojo kodą. Demo versijoje nereikia' : 'Vartotojo kodas';
   }
 
   showKey() {
-    this.keyType = "";
+    this.keyType = '';
   }
 
   hideKey() {
-    this.keyType = "password";
+    this.keyType = 'password';
   }
 
   conditionClick() {

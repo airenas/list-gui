@@ -1,10 +1,10 @@
-import { TranscriptionService } from '../service/transcription.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranscriptionService } from '../service/transcription.service';
 
 export abstract class BaseComponent {
   error: string;
 
-  constructor(protected transcriptionService: TranscriptionService, protected snackBar: MatSnackBar) { 
+  constructor(protected transcriptionService: TranscriptionService, protected snackBar: MatSnackBar) {
     this.error = '';
   }
 
