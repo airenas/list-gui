@@ -4,7 +4,7 @@ dist_dir=$(CURDIR)/deploy
 port?=8000
 main_dir=ear-app
 commit_count=$(shell git rev-list --count HEAD)
-COMPONENT_VERSION?=0.3
+COMPONENT_VERSION?=0.4
 version=$(COMPONENT_VERSION).$(commit_count)
 #####################################################################################
 init: 
