@@ -74,7 +74,7 @@ describe('UploadComponent', () => {
 
   it('should have UseKey placeholder', async(() => {
     expect(fixture.debugElement.query(By.css('#userKey'))
-      .nativeElement.getAttribute('placeholder')).toBe('Įveskite vartotojo kodą. Demo versijoje nereikia');
+      .nativeElement.getAttribute('placeholder')).toContain('Naudotojo kodas (būtinas ');
   }));
 
   it('should change UseKey placeholder', async(() => {
@@ -82,7 +82,7 @@ describe('UploadComponent', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect(fixture.debugElement.query(By.css('#userKey'))
-        .nativeElement.getAttribute('placeholder')).toBe('Vartotojo kodas');
+        .nativeElement.getAttribute('placeholder')).toBe('Naudotojo kodas');
     });
   }));
 
