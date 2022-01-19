@@ -28,15 +28,15 @@
               patys įrašyti</div>
             <div class="upload-input-width">
               <div class="upload-file-container-dnd file-input" appFileDnd
-                (fileDropped)="dropFile($event, ['.mp4', '.wav','.mp3','.m4a'], false)">
+                (fileDropped)="dropFile($event, allAudioExt, false)">
                 <div *ngIf="!recorder.recording && !files?.length" class="dnd-div" id="dndDivAudio">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
                 </div>
                 <div class="upload-file-container">
                   <mat-form-field class="upload-file-control">
-                    <input id="hiddenFileInput" hidden type="file" accept=".wav,.mp3,.m4a,.mp4"
-                      (change)="filesChange($event.target.files)">
+                    <input id="hiddenFileInput" hidden type="file" accept="{{allAudioExt.join()}}"
+                      (change)="dropFile($event.target.files, allAudioExt, false)">
                     <input id="fileInput" matInput placeholder="Failas" readonly="true" [(ngModel)]="selectedFileName"
                       (click)="openInput()" matTooltip="Pasirinkite audio failą">
                   </mat-form-field>
@@ -66,15 +66,15 @@
               telefoninis įrašas</div>
             <div class="upload-input-width">
               <div class="upload-file-container-dnd file-input" appFileDnd
-                (fileDropped)="dropFile($event, ['.mp4', '.wav','.mp3','.m4a'], false)">
+                (fileDropped)="dropFile($event, allAudioExt, false)">
                 <div *ngIf="!files?.length" class="dnd-div" id="dndDivPhone">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
                 </div>
                 <div class="upload-file-container">
                   <mat-form-field class="upload-file-control">
-                    <input id="hiddenFileInputPhone" hidden type="file" accept=".wav,.mp3,.m4a,.mp4"
-                      (change)="filesChange($event.target.files)">
+                    <input id="hiddenFileInputPhone" hidden type="file" accept="{{allAudioExt.join()}}"
+                      (change)="dropFile($event.target.files, allAudioExt, false)">
                     <input id="fileInputPhone" matInput placeholder="Failas" readonly="true"
                       [(ngModel)]="selectedFileName" (click)="openInputPhone()"
                       matTooltip="Pasirinkite tel. kokybės audio failą">
@@ -98,15 +98,15 @@
               variantą</div>
             <div class="upload-input-width">
               <div class="upload-file-container-dnd file-input" appFileDnd
-                (fileDropped)="dropFile($event, ['.mp4'], false)">
+                (fileDropped)="dropFile($event, videoExt, false)">
                 <div *ngIf="!files?.length" class="dnd-div" id="dndDivVideo">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failą</span>
                 </div>
                 <div class="upload-file-container">
                   <mat-form-field class="upload-file-control">
-                    <input id="hiddenFileInputVideo" hidden type="file" accept=".mp4"
-                      (change)="filesChange($event.target.files)">
+                    <input id="hiddenFileInputVideo" hidden type="file" accept="{{videoExt.join()}}"
+                      (change)="dropFile($event.target.files, videoExt, false)">
                     <input id="fileInputVideo" matInput placeholder="Failas" readonly="true"
                       [(ngModel)]="selectedFileName" (click)="openInputVideo()"
                       matTooltip="Pasirinkite arba užtempkite video failą">
@@ -127,15 +127,15 @@
               failų)</div>
             <div class="upload-input-width">
               <div class="upload-file-container-dnd file-input" appFileDnd
-                (fileDropped)="dropFile($event, ['.m4a'], true)">
+                (fileDropped)="dropFile($event, zoomExt, true)">
                 <div *ngIf="!files?.length" class="dnd-div" id="dndDivZoom">
                   <i class="material-icons dnd-icon">input</i>
                   <span class="dnd-span">Įtempkite failus</span>
                 </div>
                 <div class="upload-file-container">
                   <mat-form-field class="upload-file-control">
-                    <input id="hiddenFileInputZoom" hidden type="file" accept=".m4a"
-                      (change)="filesChange($event.target.files)" multiple>
+                    <input id="hiddenFileInputZoom" hidden type="file" accept="{{zoomExt.join()}}"
+                      (change)="dropFile($event.target.files, zoomExt, true)" multiple>
                     <input id="fileInputZoom" matInput placeholder="Failai" readonly="true"
                       [(ngModel)]="selectedFileName" (click)="openInputZoom()"
                       matTooltip="Pasirinkite arba užtempkite audio failus">

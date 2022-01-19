@@ -63,6 +63,10 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   VideoType = 2;
   ZoomType = 3;
 
+  videoExt = ['.mp4'];
+  zoomExt = ['.m4a'];
+  allAudioExt = ['.mp4', '.wav', '.mp3', '.m4a'];
+
   ngOnInit() {
     console.log('Version=' + environment.version);
     this.inputIndexInt = this.paramsProviderService.getInputMethod();
@@ -293,7 +297,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 
   isValid() {
-    return  this.conditionChecked && this.files?.length && this._email && !this.recorder.recording;
+    return this.conditionChecked && this.files?.length && this._email && !this.recorder.recording;
   }
 
   startRecord() {
