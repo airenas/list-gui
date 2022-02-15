@@ -69,7 +69,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
 
   ngOnInit() {
     console.log('Version=' + environment.version);
-    this.inputIndexInt = this.paramsProviderService.getInputMethod();
+    this.inputIndexInt = this.paramsProviderService.getInputMethod() ?? this.AudioType;
     this.audioPlayer = this.audioPlayerFactory.create('#audioWaveDiv', (ev) => this.cdr.detectChanges());
     this.recorder = this.microphoneFactory.create('#micWaveDiv', (ev, data) => this.recordEvent(ev, data));
     this._email = this.paramsProviderService.getEmail();

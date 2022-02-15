@@ -115,6 +115,12 @@ describe('UploadComponent', () => {
     expect(fixture.debugElement.query(By.css('#uploadButton')).nativeElement.disabled).toBe(true);
   }));
 
+  it('should have non null inputIndex', async(() => {
+    fixture.whenStable().then(() => {
+      expect(component.inputIndex).toBe(0);
+    });
+  }));
+
   it('should have enabled button on valid Input', async(() => {
     expect(fixture.debugElement.query(By.css('#uploadButton')).nativeElement.disabled).toBe(true);
     component.fileChange(new FileHelper().createFakeFile());
