@@ -35,7 +35,7 @@ The result will be ready at *deploy/html*.
 
 ## License
 
-Copyright © 2021, [Airenas Vaičiūnas](https://github.com/airenas), [intelektika.lt](http://intelektika.lt).
+Copyright © 2022, [Airenas Vaičiūnas](https://github.com/airenas), [intelektika.lt](http://intelektika.lt).
 Released under the [The 3-Clause BSD License](LICENSE).
 
 The project uses other licensed software. See [Licenses](Licenses/).
