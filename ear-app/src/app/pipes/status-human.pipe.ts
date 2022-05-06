@@ -31,6 +31,9 @@ export class StatusHumanPipe implements PipeTransform {
     if (value === Status.JoinResults) {
       return 'Ruošiami/apjungiami rezultatai';
     }
+    if (value === Status.SplitChannels) {
+      return 'Atskiriami audio takeliai';
+    }
     if (value === Status.NOT_FOUND) {
       return 'Nežinomas ID';
     }

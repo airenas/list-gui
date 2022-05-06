@@ -7,5 +7,6 @@ export enum Status {
     Rescore = 'Rescore',
     ResultMake = 'ResultMake',
     JoinResults = 'JoinResults',
+    SplitChannels = 'SplitChannels',
     NOT_FOUND = 'NOT_FOUND',
 }

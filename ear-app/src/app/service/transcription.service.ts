@@ -45,6 +45,9 @@ export class HttpTranscriptionService implements TranscriptionService {
       if (value.includes('No recognizer') || value.includes('Unknown recognizer:')) {
         return 'Nepavyko parinkti atpažintuvą';
       }
+      if (value.includes('sepSpeakersOnChannel') || value.includes('not supported with multiple files')) {
+        return 'Negalimas "Kalbėtojų skaičiaus" pasirinkimas';
+      }
     }
     return 'Sistemos klaida. Prašome kreiptis į sistemos administratorių info@intelektika.lt';
   }
