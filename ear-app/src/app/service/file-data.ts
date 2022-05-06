@@ -4,5 +4,6 @@ export class FileData {
     recognizer: string;
     speakerCount: string;
     skipNumJoin?: boolean;
+    sepSpeakersOnChannel?: boolean;
     key?: string;
 }

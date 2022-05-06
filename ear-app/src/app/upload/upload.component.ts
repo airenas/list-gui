@@ -103,7 +103,11 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   initSpeakerCount() {
     this.speakerCountValues = [
       { id: '1', name: '1', tooltip: 'Vieno kalbėtojo garso įrašas' },
-      { id: '2', name: '2', tooltip: 'Garso įraše kalba du kalbėtojai' },
+      { id: '2', name: '2', tooltip: 'Audio įraše kalba du kalbėtojai' },
+      {
+        id: sepSpeakersOnChannelID, name: '2 - atskiruose audio takeliuose',
+        tooltip: 'Audio įraše kalba du kalbėtojai. Kalbėtojai atskiruose takeliuose'
+      },
       { id: '-', name: 'Pasirinkti automatiškai', tooltip: 'Automatiškai nustatomas kalbėtojų skaičius' }
     ];
     this._speakerCount = this.paramsProviderService.getSpeakerCount();
@@ -208,7 +212,8 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
     this.transcriptionService.sendFile({
       files: files, email: this.email,
       recognizer: this.recognizer(this.inputIndex),
-      speakerCount: ((this.speakerCount ?? '-') === '-' ? '' : this.speakerCount),
+      speakerCount: getSpeakerCount(this.speakerCount),
+      sepSpeakersOnChannel: (this.speakerCount ?? '-') === sepSpeakersOnChannelID,
       skipNumJoin: this._uploadParamSkipNumJoin,
       key: this._userKey ?? ''
     })
@@ -338,8 +343,19 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
   }
 }
 
+const sepSpeakersOnChannelID = '2c';
+
 interface SpeakerCount {
   id: string;
   name: string;
   tooltip?: string;
 }
+
+export function getSpeakerCount(speakerCount: string): string {
+  const v = speakerCount ?? '-';
+  if (v === '1' || v === '2') {
+    return v;
+  }
+  return '';
+}
+

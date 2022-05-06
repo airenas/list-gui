@@ -14,7 +14,7 @@ import { TestMicrophoneFactory } from '../utils/microphone.specs';
 import { AudioComponent } from './../audio/audio.component';
 import { TranscriptionService } from './../service/transcription.service';
 import { TestAudioPlayerFactory } from './../utils/audio.player.specs';
-import { UploadComponent } from './upload.component';
+import { getSpeakerCount, UploadComponent } from './upload.component';
 
 
 class TestUtil {
@@ -393,7 +393,7 @@ describe('UploadComponent', () => {
   it('should have set speakerCount values', async(() => {
     component = fixture.debugElement.componentInstance;
     fixture.whenStable().then(() => {
-      expect(component.speakerCountValues.length).toBe(3);
+      expect(component.speakerCountValues.length).toBe(4);
     });
   }));
   it('should have set speakerCount value', async(() => {
@@ -558,4 +558,17 @@ describe('UploadComponent Own Mock', () => {
       expect(component._uploadParamSkipNumJoin).toEqual(true);
     });
   }));
+});
+
+describe('getSpeakerCount', () => {
+  it('should return value', () => {
+    expect(getSpeakerCount('1')).toBe('1');
+    expect(getSpeakerCount('2')).toBe('2');
+  });
+  it('should return empty string', () => {
+    expect(getSpeakerCount('')).toBe('');
+    expect(getSpeakerCount('2c')).toBe('');
+    expect(getSpeakerCount(null)).toBe('');
+    expect(getSpeakerCount(undefined)).toBe('');
+  });
 });

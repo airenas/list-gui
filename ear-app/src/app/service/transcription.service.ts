@@ -70,6 +70,9 @@ export class HttpTranscriptionService implements TranscriptionService {
     if (fileData.skipNumJoin === true) {
       formData.append('skipNumJoin', '1');
     }
+    if (fileData.sepSpeakersOnChannel === true) {
+      formData.append('sepSpeakersOnChannel', '1');
+    }
 
     const httpOptions = {
       headers: new HttpHeaders({
