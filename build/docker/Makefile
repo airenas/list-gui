@@ -17,7 +17,10 @@ $(dist_dir)/.build: | $(dist_dir)/html
 	cp index.html $(dist_dir)/html/
 	touch $(dist_dir)/.build
 
-build: $(dist_dir)/.build
+$(dist_dir)/html/index.html: index.html $(dist_dir)/.build 
+	cp index.html $(dist_dir)/html/
+
+build: $(dist_dir)/.build $(dist_dir)/html/index.html
 ########### DOCKER ##################################################################
 tag=airenas/$(service):$(version)
 
