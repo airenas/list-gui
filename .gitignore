@@ -5,3 +5,5 @@ trans-component-*.tar.gz
 .vscode/launch.json
 dariaus/**
 design/**
+build/docker/deploy/
+.vscode/

@@ -1,11 +1,9 @@
 -include Makefile.options
+-include version
 #####################################################################################
 dist_dir=$(CURDIR)/deploy
 port?=8000
 main_dir=ear-app
-commit_count=$(shell git rev-list --count HEAD)
-COMPONENT_VERSION?=0.5
-version=$(COMPONENT_VERSION).$(commit_count)
 #####################################################################################
 init: 
 	cd $(main_dir) && npm ci
@@ -57,7 +55,14 @@ trans-component-$(version).tar.gz: $(trans_files) $(dist_dir)/.build | $(dist_di
 #####################################################################################
 put-component:
 	scp trans-component-$(version).tar.gz $(component-share)
-
+#####################################################################################
+dbuild:
+	cd build/docker && $(MAKE) clean dbuild
+dpush:
+	cd build/docker && $(MAKE) dpush
+dscan:
+	cd build/docker && $(MAKE) dscan
+#####################################################################################
 clean:
 	rm -rf $(dist_dir)
 
