@@ -7,3 +7,4 @@ dariaus/**
 design/**
 build/docker/deploy/
 .vscode/
+samples/

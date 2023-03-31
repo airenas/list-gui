@@ -65,7 +65,7 @@ export class UploadComponent extends BaseComponent implements OnInit, OnDestroy,
 
   videoExt = ['.mp4'];
   zoomExt = ['.m4a'];
-  allAudioExt = ['.mp4', '.wav', '.mp3', '.m4a'];
+  allAudioExt = ['.mp4', '.wav', '.mp3', '.m4a', '.ogg', '.wma', '.webm'];
 
   ngOnInit() {
     console.log('Version=' + environment.version);
